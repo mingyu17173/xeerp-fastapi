@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+gunicorn
+httptools
+pymysql          # mysql
+psycopg2-binary  # postgresql
+sqlalchemy
+redis
+python-dotenv
+pyjwt
+passlib
+asyncmy
+loguru
+orjson
