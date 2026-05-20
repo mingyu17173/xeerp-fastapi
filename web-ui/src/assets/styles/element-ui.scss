@@ -1,0 +1,255 @@
+// cover some element-ui styles
+$--but-color-primary: #0858a8;
+
+// 下拉框去除蓝色边框
+.el-select {
+  --el-select-input-focus-border-color: none !important;
+}
+
+.el-button {
+  border-radius: 0px;
+}
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+.el-popover.el-popper {
+  min-width: 110px;
+}
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// fix date-picker ui bug in filter-item
+.el-range-editor.el-input__inner {
+  display: inline-flex !important;
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-menu--collapse
+> div
+> .el-submenu
+> .el-submenu__title
+.el-submenu__icon-arrow {
+  display: none;
+}
+
+.el-menu {
+  &--horizontal {
+    height: 50px;
+
+  }
+}
+
+.el-menu--horizontal.el-menu {
+  border-bottom: none;
+}
+
+
+.el-dropdown .el-dropdown-link {
+  color: var(--el-color-primary) !important;
+}
+
+.el-input {
+  &__wrapper {
+    box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+    border: 2px solid #dfe1e6;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+
+    &:hover {
+      box-shadow: 0 0 0 0px var(--el-input-hover-border-color) inset;
+      border: 2px solid #65a6fb;
+      border-radius: 0px;
+
+      background-color: #fff;
+      // border-color: #dfe1e6;
+      color: #172b4d;
+
+    }
+  }
+
+  &__wrapper.is-focus {
+    box-shadow: 0 0 0 0px var(--el-input-focus-border-color) inset;
+    border: 2px solid #65a6fb;
+    border-radius: 0px;
+  }
+
+  &__inner {
+
+    font-size: 14px;
+    font-weight: 500;
+
+    ::-moz-placeholder {
+      color: var(--el-input-placeholder-color, var(--el-text-color-placeholder))
+    }
+
+    :-ms-input-placeholder {
+      color: var(--el-input-placeholder-color, var(--el-text-color-placeholder))
+    }
+
+    &::placeholder {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--el-input-placeholder-color, var(--el-text-color-placeholder))
+    }
+  }
+}
+
+
+.el-textarea {
+
+  &__inner {
+    box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+    border: 2px solid #dfe1e6;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f9f9f9;
+
+    &:hover {
+      box-shadow: 0 0 0 0px var(--el-input-hover-border-color) inset;
+      border: 2px solid #65a6fb;
+      border-radius: 0px;
+      background-color: #fff;
+
+      // border-color: #dfe1e6;
+      color: #172b4d;
+
+    }
+
+    &::placeholder {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--el-input-placeholder-color, var(--el-text-color-placeholder))
+    }
+  }
+}
+
+.el-form-item.is-error .el-input__wrapper {
+  box-shadow: 0 0 0 0px var(--el-color-danger) inset;
+  border: 2px solid var(--el-color-danger);
+  border-radius: 0px;
+}
+
+.el-range-editor.is-active {
+  box-shadow: 0 0 0 0px var(--el-input-focus-border-color) inset;
+}
+
+.el-date-editor.el-input__wrapper {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+}
+
+.el-select:hover:not(.el-select--disabled) .el-input__wrapper {
+  box-shadow: 0 0 0 0px var(--el-select-border-color-hover) inset;
+}
+
+.el-select .el-input.is-focus .el-input_wrapper {
+  box-shadow: 0 0 0 0px var(--el-select-input-focus-border-color) inset !important;
+}
+
+// .el-button.is-link {
+//   color: var(--but-color-primary);
+// }
+
+.el-drawer {
+  overflow: unset;
+
+  &__header {
+    padding: 20px 30px 0px 30px;
+    margin-bottom: 0px;
+  }
+
+  &__body {
+    padding: 0px 30px 0px 30px;
+  }
+}
+
+.el-input__wrapper {
+  padding: 0px 0px 0px 11px;
+  background-color: #f9f9f9;
+  border:2px solid #dfe1e6;
+}
+
+.el-input__suffix-inner {
+  width: 26px;
+  margin-right: 5px;
+  // background-color: #eaeaea;
+}
+
+:root {
+  --el-box-shadow-light: 0px 0px 6px rgba(0, 0, 0, 0.08)
+}
+
+
