@@ -1,30 +1,13 @@
-# XEERP\-FASTAPI 企业级库存销售微服务系统详解
-
 # XEERP\-FASTAPI Enterprise\-level Inventory \&amp; Sales Micro\-Service System
 
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=OTQyMGZmODRiZTQ4YmQ2NTMyOTM1ZWNlYmM0MDEzNTFfZjZlZmI3YjAyNmU3YTQxNTc5N2JmMzg5MTNjYmQ4ZWFfSUQ6NzY0MTkxOTM0MTY0NjM1MTU1NV8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=MGRhZTExNjgxYjQ2NDc5YmI0N2YyOWE3NzczOWNmNzNfOWJjZjcwNWRmMjBjODUwMTJlNzAxMDVjNGE1YmY4N2ZfSUQ6NzY0MTkxOTMzNTAzNjk0NzY3N18xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=YWJjNTNkNTEyZjczODEyMGZkNzIyOTU4YWQzZDAzN2FfZWI2ZmFiMGRjYjRkNTdiNDU5NWE1YjQzYjBmN2QxOGRfSUQ6NzY0MTkxOTMzNzE2NzE2MjU1OV8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=N2VhOGY5MjQ2ZGIxYzI0MmMzZDE2MjM1NjY1MDg5MGNfMmQ5NGI3ZmFhY2RmMTU4NTE0MzcwZjJmZjYyYmFkNWFfSUQ6NzY0MTkxOTMzMzQ5NzQ5MDYyNV8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=OGRjYWMwNzUyMjY5MDQ1ZDEyNzVkNTNlOTQyNzA1OWRfYzFkODAwMzgyNTQyYmYwOWQ2N2RiMTc5ZGM3OTY2ZmZfSUQ6NzY0MTkxOTMzNjU3NTQ3MDc5Nl8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=OGY2MGFkOTA4OGJiM2E1NjUzNTkyOGFiMmMxNzAzZDBfYjM2MTM3MjFlYjExYjNhYzJlOTFjMGZiZTY0MWVjNzBfSUQ6NzY0MTkxOTMzOTg1NTM1MDk2NV8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
-
-
-
-![Image](https://internal-api-drive-stream.larkoffice.com/space/api/box/stream/download/authcode/?code=MTc5OWE4MzM3NWM5ZjI0NzkyMWJlMmFmZjFiNTA2ZjJfODEyMjkxNmJkMGFmMDYxODMzMWZhZjA0M2IzMDg5ZDlfSUQ6NzY0MTkxOTMzOTc5NTk0MjYyMF8xNzc5MjczMDExOjE3NzkzNTk0MTFfVjM)
+![Docs](https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E5%9C%A8%E7%BA%BF-green.svg?logo=readthedocs&label=Docs)
+![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-latest-green.svg)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0+-orange.svg)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue.svg)
+![Redis](https://img.shields.io/badge/Redis-7.0+-red.svg)
+![Vue3](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)
+![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 
 ## Introduction
 
@@ -241,5 +224,3 @@ XEERP-FASTAPI/
 3. Complete open source project operation document system
 
 4. Standard open source contribution specification \&amp; community operation guide
-
-> （注：文档部分内容可能由 AI 生成）
