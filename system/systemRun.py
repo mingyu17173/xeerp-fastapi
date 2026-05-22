@@ -13,7 +13,7 @@ from server import app, AppConfig
 
 if __name__ == "__main__":
     uvicorn.run(
-        app='run:app',
+        app='server:app',
         host=AppConfig.app_host,
         port=AppConfig.app_port,
         root_path=AppConfig.app_root_path,

@@ -10,6 +10,7 @@ from middlewares.handle import handle_middleware
 from api import register_routers
 from utils.common_util import worship
 from utils.log_util import logger
+from utils.service_registry import auto_register
 from fastapi import FastAPI
 
 
@@ -23,6 +24,10 @@ async def lifespan(app: FastAPI):
     await RedisUtil.init_sys_config(app.state.redis)
     await RedisUtil.init_sys_user(app.state.redis)
     await SchedulerUtil.init_system_scheduler()
+    
+    # 注册服务到 Consul
+    auto_register("system")
+    
     logger.info(f'🚀 {AppConfig.app_name}启动成功')
     yield
     await RedisUtil.close_redis_pool(app)
@@ -41,6 +46,11 @@ app = FastAPI(
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
 )
+
+# 健康检查（Consul 健康检查端点）
+@app.get("/health")
+async def health():
+    return {"status": "UP"}
 
 # 注册路由
 register_routers(app)
