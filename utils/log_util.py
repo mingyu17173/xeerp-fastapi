@@ -10,6 +10,7 @@ import os
 import logging
 import zipfile
 import shutil
+import time
 from datetime import datetime, timedelta
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
@@ -63,7 +64,7 @@ def setup_logger(service_name: str, log_level: str = 'INFO') -> logging.Logger:
         interval=1,            # 间隔1天
         backupCount=30,        # 保留30天日志
         encoding='utf-8',      # UTF-8编码
-        delay=False            # 立即创建文件
+        delay=True             # 延迟创建文件，避免Windows文件锁定问题
     )
     main_handler.setFormatter(formatter)
     logger.addHandler(main_handler)
@@ -76,7 +77,7 @@ def setup_logger(service_name: str, log_level: str = 'INFO') -> logging.Logger:
         interval=1,            # 间隔1天
         backupCount=30,        # 保留30天日志
         encoding='utf-8',      # UTF-8编码
-        delay=False            # 立即创建文件
+        delay=True             # 延迟创建文件，避免Windows文件锁定问题
     )
     error_handler.setFormatter(formatter)
     error_handler.setLevel(logging.ERROR)  # 只处理 ERROR 及以上级别
@@ -104,8 +105,21 @@ def _setup_log_rotation(base_name: str, handler: TimedRotatingFileHandler):
     original_doRollover = handler.doRollover
     
     def custom_doRollover():
-        # 执行原始的日志轮换
-        original_doRollover()
+        # 执行原始的日志轮换（带重试机制）
+        max_retries = 3
+        retry_delay = 1  # 秒
+        
+        for attempt in range(max_retries):
+            try:
+                original_doRollover()
+                break
+            except PermissionError as e:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                else:
+                    # 记录错误但不抛出，避免影响服务运行
+                    print(f"Log rotation failed after {max_retries} attempts: {e}")
+                    return
         
         # 获取所有备份日志文件
         log_dir = LOG_DIR
@@ -127,10 +141,18 @@ def _setup_log_rotation(base_name: str, handler: TimedRotatingFileHandler):
                     with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
                         zipf.write(backup_file, backup_file.name)
                     
-                    # 删除原备份文件
-                    temp_file = backup_file.with_suffix('.processed')
-                    backup_file.rename(temp_file)
-                    os.remove(temp_file)
+                    # 使用 shutil.move 替代 os.remove，更安全
+                    try:
+                        backup_file.unlink()
+                    except PermissionError:
+                        # 如果无法删除，标记为已处理
+                        try:
+                            temp_file = backup_file.with_suffix('.processed')
+                            shutil.move(str(backup_file), str(temp_file))
+                            temp_file.unlink()
+                        except Exception:
+                            # 如果仍然失败，跳过这个文件
+                            pass
                 except Exception as e:
                     print(f"Failed to compress log file {backup_file}: {e}")
     
