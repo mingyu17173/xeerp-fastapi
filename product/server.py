@@ -5,6 +5,7 @@ from core.env import AppConfig
 from core.get_db import init_create_table
 from core.logger import logger
 from api import register_routers
+from utils.service_registry import auto_register
 
 
 @asynccontextmanager
@@ -13,6 +14,11 @@ async def lifespan(app: FastAPI):
     应用生命周期管理
     """
     logger.info(f'[START] {AppConfig.app_name} starting...')
+    
+    # 注册服务到Nacos
+    logger.info("🔗 正在注册服务到Nacos...")
+    auto_register("product")
+    
     # 初始化数据库表
     await init_create_table()
     logger.info(f'[SUCCESS] {AppConfig.app_name} started successfully')
