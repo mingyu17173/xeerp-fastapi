@@ -16,7 +16,7 @@ class AppSettings(BaseSettings):
     """
 
     app_env: str = 'dev'
-    app_name: str = 'xeapp-fasapi'
+    app_name: str = 'system-server'
     app_root_path: str = ''
     app_host: str = '0.0.0.0'
     app_port: int = 8001
