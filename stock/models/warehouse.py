@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: warehouse.py
+# @Software: PyCharm
+# @Desc : 数据模型
+
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
 from core.database import Base
 from datetime import datetime

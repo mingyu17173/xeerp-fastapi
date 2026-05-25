@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: post_controler.py
+# @Software: PyCharm
+# @Desc : API模块
+
 from datetime import datetime
 from fastapi import APIRouter, Depends, Form, Request
 from pydantic_validation_decorator import ValidateFields

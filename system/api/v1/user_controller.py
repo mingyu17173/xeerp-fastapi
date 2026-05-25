@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: user_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 import os
 from datetime import datetime
 from fastapi import APIRouter, Depends, File, Form, Query, Request, UploadFile

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: __init__.py
+# @Software: PyCharm
+# @Desc : 模块文件
+
 """
 微服务客户端模块
 用于封装对其他微服务的 API 调用

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: user_dao.py
+# @Software: PyCharm
+# @Desc : 数据访问层
+
 from datetime import datetime, time
 from sqlalchemy import and_, delete, desc, func, or_, select, update
 from sqlalchemy.orm import joinedload

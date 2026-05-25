@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: exceptions.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 """
 Sales Service Custom Exceptions
 销售服务自定义异常

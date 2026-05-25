@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: production_return_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from datetime import datetime
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +15,7 @@ from dao.production_issue_dao import ProductionIssueDao
 from models.production_receipt import SysProductionReturn, SysProductionReturnItem
 from schemas.common_schema import CrudResponseModel, PageResponseModel
 from schemas.production_return_schema import ProductionReturnModel, AddProductionReturnModel, ProductionReturnPageQueryModel
-from core.env import AppConfig
+from core.production_env import AppConfig
 
 class ProductionReturnService:
     @classmethod
