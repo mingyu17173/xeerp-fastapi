@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: time_format_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
 from copy import deepcopy
 from datetime import datetime
 from dateutil.parser import parse

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: captcha_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 import base64
 import io
 import os

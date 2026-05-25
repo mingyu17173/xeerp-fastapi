@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: __init__.py
+# @Software: PyCharm
+# @Desc : API模块
+
 from fastapi import FastAPI
 from api.v1.product_controller import productController
 from api.v1.unit_controller import unitController

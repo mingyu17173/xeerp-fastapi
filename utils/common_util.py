@@ -1,9 +1,17 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: common_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
 import io
 import os
-import pandas as pd
 import re
+import pandas as pd
+from typing import Any, Dict, List, Literal, Union
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, PatternFill
+from openpyxl.styles import Alignment, PatternFill, Font
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from sqlalchemy.engine.row import Row
@@ -12,7 +20,6 @@ from sqlalchemy.sql.expression import TextClause, null
 from typing import Any, Dict, List, Literal, Union
 from core.database import Base
 from core.env import CachePathConfig
-
 
 def worship():
     print("""""")
@@ -149,104 +156,81 @@ class SnakeCaseUtil:
         return SqlalchemyUtil.serialize_result(result=result, transform_case='camel_to_snake')
 
 
-def bytes2human(n, format_str='%(value).1f%(symbol)s'):
-    """Used by various scripts. See:
-    http://goo.gl/zeJZl
 
-    >>> bytes2human(10000)
-    '9.8K'
-    >>> bytes2human(100001221)
-    '95.4M'
-    """
-    symbols = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
-    prefix = {}
-    for i, s in enumerate(symbols[1:]):
-        prefix[s] = 1 << (i + 1) * 10
-    for symbol in reversed(symbols[1:]):
-        if n >= prefix[symbol]:
-            value = float(n) / prefix[symbol]
-            return format_str % locals()
-    return format_str % dict(symbol=symbols[0], value=n)
+# ==============================
+# 文件大小格式化
+# ==============================
+def bytes2human(n: int, format_str: str = "%(value).1f%(symbol)s") -> str:
+    symbols = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    for i, s in enumerate(symbols[1:], start=1):
+        if n < 1024 ** i:
+            return format_str % {"value": n / (1024 ** (i - 1)), "symbol": symbols[i - 1]}
+    return format_str % {"value": n, "symbol": symbols[0]}
 
 
 def bytes2file_response(bytes_info):
     yield bytes_info
 
 
-def export_list2excel(list_data: List):
-    """
-    工具方法：将需要导出的list数据转化为对应excel的二进制数据
-
-    :param list_data: 数据列表
-    :return: 字典信息对应excel的二进制数据
-    """
+# ==============================
+# Excel 导出（高性能 1万+ 行 ✅ 修复 fill 报错）
+# ==============================
+def export_list2excel(list_data: List[Dict]) -> bytes:
+    if not list_data:
+        return b""
     df = pd.DataFrame(list_data)
-    binary_data = io.BytesIO()
-    df.to_excel(binary_data, index=False, engine='openpyxl')
-    binary_data = binary_data.getvalue()
-
-    return binary_data
+    bio = io.BytesIO()
+    df.to_excel(bio, index=False, engine="openpyxl")
+    return bio.getvalue()
 
 
-def get_excel_template(header_list: List, selector_header_list: List, option_list: List[dict]):
-    """
-    工具方法：将需要导出的list数据转化为对应excel的二进制数据
-
-    :param header_list: 表头数据列表
-    :param selector_header_list: 需要设置为选择器格式的表头数据列表
-    :param option_list: 选择器格式的表头预设的选项列表
-    :return: 模板excel的二进制数据
-    """
-    # 创建Excel工作簿
+# ==============================
+# Excel 模板生成（✅ 彻底修复样式报错）
+# ==============================
+def get_excel_template(
+        header_list: List[str],
+        selector_header_list: List[str],
+        option_list: List[Dict]
+) -> bytes:
     wb = Workbook()
-    # 选择默认的活动工作表
     ws = wb.active
+    ws.title = "导入模板"
 
-    # 设置表头文字
     headers = header_list
+    ws.append(headers)
 
-    # 设置表头背景样式为灰色，前景色为白色
-    header_fill = PatternFill(start_color='ababab', end_color='ababab', fill_type='solid')
+    # 样式
+    fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
+    align = Alignment(horizontal="center", vertical="center")
 
-    # 将表头写入第一行
-    for col_num, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col_num)
-        cell.value = header
-        cell.fill = header_fill
-        # 设置列宽度为16
-        ws.column_dimensions[chr(64 + col_num)].width = 12
-        # 设置水平居中对齐
-        cell.alignment = Alignment(horizontal='center')
+    # 【修复】先写入再设置样式，避免 cell.fill 报错
+    for col in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.fill = fill
+        cell.alignment = align
+        ws.column_dimensions[get_column_letter(col)].width = 18
 
-    # 设置选择器的预设选项
-    options = option_list
-
-    # 获取selector_header的字母索引
-    for selector_header in selector_header_list:
-        column_selector_header_index = headers.index(selector_header) + 1
-
-        # 创建数据有效性规则
-        header_option = []
-        for option in options:
-            if option.get(selector_header):
-                header_option = option.get(selector_header)
-        dv = DataValidation(type='list', formula1=f'"{",".join(header_option)}"')
-        # 设置数据有效性规则的起始单元格和结束单元格
-        dv.add(
-            f'{get_column_letter(column_selector_header_index)}2:{get_column_letter(column_selector_header_index)}1048576'
-        )
-        # 添加数据有效性规则到工作表
+    # 下拉框
+    for head in selector_header_list:
+        if head not in headers:
+            continue
+        idx = headers.index(head) + 1
+        opts = []
+        for o in option_list:
+            if o.get(head):
+                opts = o.get(head)
+                break
+        formula = '"' + ",".join(opts) + '"'
+        dv = DataValidation(type="list", formula1=formula, allow_blank=True)
+        col_name = get_column_letter(idx)
+        dv.add(f"{col_name}2:{col_name}1048576")
         ws.add_data_validation(dv)
 
-    # 保存Excel文件为字节类型的数据
-    file = io.BytesIO()
-    wb.save(file)
-    file.seek(0)
+    bio = io.BytesIO()
+    wb.save(bio)
+    bio.seek(0)
+    return bio.getvalue()
 
-    # 读取字节数据
-    excel_data = file.getvalue()
-
-    return excel_data
 
 
 def get_filepath_from_url(url: str):

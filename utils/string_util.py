@@ -1,170 +1,112 @@
-from typing import Dict, List
-from core.constant import CommonConstant
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: string_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
+from typing import Dict, List, Optional
+from utils.constant_util import CommonConstant
 
 
 class StringUtil:
-    """
-    字符串工具类
-    """
+    """字符串工具类（企业增强版）"""
 
     @classmethod
-    def is_blank(cls, string: str) -> bool:
+    def is_blank(cls, string: Optional[str]) -> bool:
         """
-        校验字符串是否为''或全空格
-
-        :param string: 需要校验的字符串
-        :return: 校验结果
+        校验字符串是否为 None / 空 / 全空格
+        修复原逻辑：None 应视为 blank
         """
         if string is None:
-            return False
-        str_len = len(string)
-        if str_len == 0:
             return True
-        else:
-            for i in range(str_len):
-                if string[i] != ' ':
-                    return False
-            return True
+        return len(string.strip()) == 0
 
     @classmethod
-    def is_empty(cls, string) -> bool:
-        """
-        校验字符串是否为''或None
+    def is_not_blank(cls, string: Optional[str]) -> bool:
+        return not cls.is_blank(string)
 
-        :param string: 需要校验的字符串
-        :return: 校验结果
-        """
+    @classmethod
+    def is_empty(cls, string: Optional[str]) -> bool:
+        """校验是否为 None 或 空字符串 ''"""
         return string is None or len(string) == 0
 
     @classmethod
-    def is_not_empty(cls, string: str) -> bool:
-        """
-        校验字符串是否不是''和None
-
-        :param string: 需要校验的字符串
-        :return: 校验结果
-        """
+    def is_not_empty(cls, string: Optional[str]) -> bool:
         return not cls.is_empty(string)
 
     @classmethod
-    def is_http(cls, link: str):
-        """
-        判断是否为http(s)://开头
-
-        :param link: 链接
-        :return: 是否为http(s)://开头
-        """
+    def is_http(cls, link: Optional[str]) -> bool:
+        """判断是否以 http/https 开头"""
+        if cls.is_blank(link):
+            return False
         return link.startswith(CommonConstant.HTTP) or link.startswith(CommonConstant.HTTPS)
 
+    # ====================== 忽略大小写判断 ======================
     @classmethod
-    def contains_ignore_case(cls, search_str: str, compare_str: str):
-        """
-        查找指定字符串是否包含指定字符串同时忽略大小写
-
-        :param search_str: 查找的字符串
-        :param compare_str: 比对的字符串
-        :return: 查找结果
-        """
-        if compare_str and search_str:
-            return compare_str.lower() in search_str.lower()
-        return False
+    def contains_ignore_case(cls, search_str: Optional[str], compare_str: Optional[str]) -> bool:
+        if cls.is_blank(search_str) or cls.is_blank(compare_str):
+            return False
+        return compare_str.lower() in search_str.lower()
 
     @classmethod
-    def contains_any_ignore_case(cls, search_str: str, compare_str_list: List[str]):
-        """
-        查找指定字符串是否包含指定字符串列表中的任意一个字符串同时忽略大小写
-
-        :param search_str: 查找的字符串
-        :param compare_str_list: 比对的字符串列表
-        :return: 查找结果
-        """
-        if search_str and compare_str_list:
-            return any([cls.contains_ignore_case(search_str, compare_str) for compare_str in compare_str_list])
-        return False
+    def contains_any_ignore_case(cls, search_str: Optional[str], compare_str_list: List[str]) -> bool:
+        if cls.is_blank(search_str) or not compare_str_list:
+            return False
+        return any(cls.contains_ignore_case(search_str, s) for s in compare_str_list)
 
     @classmethod
-    def equals_ignore_case(cls, search_str: str, compare_str: str):
-        """
-        比较两个字符串是否相等同时忽略大小写
-
-        :param search_str: 查找的字符串
-        :param compare_str: 比对的字符串
-        :return: 比较结果
-        """
-        if search_str and compare_str:
-            return search_str.lower() == compare_str.lower()
-        return False
+    def equals_ignore_case(cls, str1: Optional[str], str2: Optional[str]) -> bool:
+        if str1 is None or str2 is None:
+            return False
+        return str1.lower() == str2.lower()
 
     @classmethod
-    def equals_any_ignore_case(cls, search_str: str, compare_str_list: List[str]):
-        """
-        比较指定字符串是否与指定字符串列表中的任意一个字符串相等同时忽略大小写
+    def equals_any_ignore_case(cls, search_str: Optional[str], compare_str_list: List[str]) -> bool:
+        if cls.is_blank(search_str) or not compare_str_list:
+            return False
+        return any(cls.equals_ignore_case(search_str, s) for s in compare_str_list)
 
-        :param search_str: 查找的字符串
-        :param compare_str_list: 比对的字符串列表
-        :return: 比较结果
-        """
-        if search_str and compare_str_list:
-            return any([cls.equals_ignore_case(search_str, compare_str) for compare_str in compare_str_list])
-        return False
+    # ====================== 开头匹配 ======================
+    @classmethod
+    def startswith_case(cls, search_str: Optional[str], prefix: Optional[str]) -> bool:
+        if cls.is_blank(search_str) or cls.is_blank(prefix):
+            return False
+        return search_str.startswith(prefix)
 
     @classmethod
-    def startswith_case(cls, search_str: str, compare_str: str):
-        """
-        查找指定字符串是否以指定字符串开头
+    def startswith_any_case(cls, search_str: Optional[str], prefix_list: List[str]) -> bool:
+        if cls.is_blank(search_str) or not prefix_list:
+            return False
+        return any(search_str.startswith(p) for p in prefix_list)
 
-        :param search_str: 查找的字符串
-        :param compare_str: 比对的字符串
-        :return: 查找结果
-        """
-        if compare_str and search_str:
-            return search_str.startswith(compare_str)
-        return False
-
+    # ====================== 驼峰 / 下划线 转换 ======================
     @classmethod
-    def startswith_any_case(cls, search_str: str, compare_str_list: List[str]):
-        """
-        查找指定字符串是否以指定字符串列表中的任意一个字符串开头
+    def to_camel_case(cls, name: Optional[str]) -> str:
+        """下划线转大驼峰（兼容空、None、已驼峰字符串）"""
+        if cls.is_blank(name):
+            return ""
 
-        :param search_str: 查找的字符串
-        :param compare_str_list: 比对的字符串列表
-        :return: 查找结果
-        """
-        if search_str and compare_str_list:
-            return any([cls.startswith_case(search_str, compare_str) for compare_str in compare_str_list])
-        return False
+        name = name.strip().lower()
+        if "_" not in name:
+            return name.capitalize()
 
+        return "".join(part.capitalize() for part in name.split("_") if part)
+
+    # ====================== 字典忽略大小写查找 ======================
     @classmethod
-    def convert_to_camel_case(cls, name: str) -> str:
-        """
-        将下划线大写方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串
+    def get_mapping_value_by_key_ignore_case(
+        cls,
+        mapping: Dict[str, str],
+        key: Optional[str]
+    ) -> str:
+        """按key忽略大小写获取字典值，不存在返回空串"""
+        if cls.is_blank(key) or not mapping:
+            return ""
 
-        :param name: 转换前的下划线大写方式命名的字符串
-        :return: 转换后的驼峰式命名的字符串
-        """
-        if not name:
-            return ''
-        if '_' not in name:
-            return name[0].upper() + name[1:]
-        parts = name.split('_')
-        result = []
-        for part in parts:
-            if not part:
-                continue
-            result.append(part[0].upper() + part[1:].lower())
-        return ''.join(result)
-
-    @classmethod
-    def get_mapping_value_by_key_ignore_case(cls, mapping: Dict[str, str], key: str) -> str:
-        """
-        根据忽略大小写的键获取字典中的对应的值
-
-        param mapping: 字典
-        param key: 字典的键
-        :return: 字典键对应的值
-        """
+        lower_key = key.lower()
         for k, v in mapping.items():
-            if key.lower() == k.lower():
+            if k.lower() == lower_key:
                 return v
-        
-        return ''
+
+        return ""

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: partner_dao.py
+# @Software: PyCharm
+# @Desc : 数据访问层
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete, func
 from models.partner import SysPartner, PartnerType, PartnerStatus

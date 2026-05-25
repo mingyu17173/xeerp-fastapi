@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: cors_middleware.py
+# @Software: PyCharm
+# @Desc : 中间件
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

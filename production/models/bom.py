@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: bom.py
+# @Software: PyCharm
+# @Desc : 数据模型
+
 from sqlalchemy import Column, Integer, String, Numeric, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from core.database import Base

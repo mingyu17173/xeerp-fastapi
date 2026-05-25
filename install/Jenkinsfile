@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+    environment {
+        // 基础配置
+        PROJECT_NAME = 'erp-microservice'
+        DOCKER_REGISTRY = '127.0.0.1:5000' // 私有仓库，没有可删掉
+        SERVER_USER = 'root'
+        SERVER_IP = '192.168.1.100' // 你的服务器IP
+        SERVER_PATH = '/opt/erp'
+    }
+
+    stages {
+        stage('1. 拉取代码') {
+            steps {
+                git url: 'https://gitee.com/你的账号/erp.git', branch: 'master'
+            }
+        }
+
+        stage('2. 构建所有服务镜像') {
+            steps {
+                sh '''
+                    docker-compose build
+                '''
+            }
+        }
+
+        stage('3. 推送镜像（可选）') {
+            steps {
+                sh '''
+                    # 如无私有仓库，可注释此阶段
+                    # docker-compose push
+                '''
+            }
+        }
+
+        stage('4. 传输 docker-compose 到服务器') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(
+                    configName: 'prod-server', // Jenkins里配置的服务器名称
+                    transfers: [sshTransfer(sourceFiles: 'docker-compose.yml,.env',
+                        remoteDirectory: 'erp')],
+                )])
+            }
+        }
+
+        stage('5. 远程部署启动') {
+            steps {
+                sshCommand(
+                    command: "cd /opt/erp && docker-compose up -d",
+                    credentialsId: 'prod-ssh',
+                    host: "${SERVER_IP}",
+                    user: "${SERVER_USER}"
+                )
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ ERP 微服务部署成功！'
+        }
+        failure {
+            echo '❌ 部署失败！'
+        }
+    }
+}

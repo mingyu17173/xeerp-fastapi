@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: cron_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
 import re
 from datetime import datetime
 

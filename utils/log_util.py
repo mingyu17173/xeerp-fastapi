@@ -1,10 +1,9 @@
-"""
-统一日志工具模块
-- 所有服务日志输出到项目根目录 logs/ 下
-- 按服务名称生成日志文件：gateway.log, system.log, order.log 等
-- 错误日志独立输出：gateway.error.log, system.error.log, order.error.log
-- 每日自动压缩前一天的日志文件为 zip 格式
-"""
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: log_util.py
+# @Software: PyCharm
+# @Desc : 工具类
 
 import os
 import logging
@@ -15,14 +14,11 @@ from datetime import datetime, timedelta
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
-# 项目根目录
+# ===================== 项目路径 =====================
 PROJECT_ROOT = Path(__file__).parent.parent
 LOG_DIR = PROJECT_ROOT / "logs"
-
-# 确保日志目录存在
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-# 日志级别映射
 LOG_LEVELS = {
     'DEBUG': logging.DEBUG,
     'INFO': logging.INFO,
@@ -31,265 +27,141 @@ LOG_LEVELS = {
     'CRITICAL': logging.CRITICAL
 }
 
-def setup_logger(service_name: str, log_level: str = 'INFO') -> logging.Logger:
-    """
-    配置服务日志记录器
-    
-    Args:
-        service_name: 服务名称，用于生成日志文件名
-        log_level: 日志级别，默认为 INFO
-    
-    Returns:
-        配置好的日志记录器
-    """
-    logger = logging.getLogger(service_name)
-    
-    # 设置日志级别
+# ===================== 彩色日志格式 =====================
+class ColorFormatter(logging.Formatter):
+    grey = "\033[90m"
+    green = "\033[92m"
+    yellow = "\033[93m"
+    red = "\033[91m"
+    reset = "\033[0m"
+
+    base_format = "%(asctime)s | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d - %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: grey + base_format + reset,
+        logging.INFO: green + base_format + reset,
+        logging.WARNING: yellow + base_format + reset,
+        logging.ERROR: red + base_format + reset,
+        logging.CRITICAL: red + base_format + reset,
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+# ===================== Windows 安全日志切割 =====================
+class SafeTimedRotatingFileHandler(TimedRotatingFileHandler):
+    def doRollover(self):
+        if self.stream:
+            try:
+                self.stream.flush()
+                self.stream.close()
+            except Exception:
+                pass
+            self.stream = None
+
+        current_time = int(time.time())
+        t = self.rolloverAt - self.interval
+        time_tuple = time.localtime(t)
+        dfn = self.rotation_filename(self.baseFilename + "." + time.strftime(self.suffix, time_tuple))
+
+        if os.path.exists(dfn):
+            pass
+        elif os.path.exists(self.baseFilename):
+            renamed = False
+            for attempt in range(5):
+                try:
+                    os.rename(self.baseFilename, dfn)
+                    renamed = True
+                    break
+                except PermissionError:
+                    time.sleep(0.25)
+            if not renamed:
+                try:
+                    shutil.copy2(self.baseFilename, dfn)
+                    with open(self.baseFilename, 'w', encoding='utf-8') as f:
+                        f.truncate(0)
+                except Exception:
+                    pass
+
+            if self.backupCount > 0:
+                for old in self.getFilesToDelete():
+                    try:
+                        os.remove(old)
+                    except Exception:
+                        pass
+
+            self._compress(dfn)
+
+        if not self.delay:
+            self.stream = self._open()
+
+        new_rollover = self.computeRollover(current_time)
+        while new_rollover <= current_time:
+            new_rollover += self.interval
+        self.rolloverAt = new_rollover
+
+    def _compress(self, file_path):
+        try:
+            zip_path = f"{file_path}.zip"
+            with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+                zf.write(file_path, os.path.basename(file_path))
+            os.remove(file_path)
+        except Exception:
+            pass
+
+# ===================== 日志初始化 =====================
+def setup_logger(service_name: str, log_level: str = "INFO") -> logging.Logger:
+    logger=logging.getLogger(service_name)
     logger.setLevel(LOG_LEVELS.get(log_level.upper(), logging.INFO))
-    
-    # 避免重复添加处理器
-    if logger.handlers:
-        return logger
-    
-    # 通用日志格式
-    formatter = logging.Formatter(
-        '%(asctime)s | %(levelname)s | %(module)s:%(funcName)s:%(lineno)d - %(message)s'
+    logger.handlers.clear()
+
+    file_fmt = logging.Formatter("%(asctime)s | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d - %(message)s")
+
+    # 主日志
+    main_file = LOG_DIR / f"{service_name}.log"
+    main_handler = SafeTimedRotatingFileHandler(
+        filename=str(main_file),
+        when="midnight",
+        interval=1,
+        backupCount=30,
+        encoding="utf-8",
+        delay=True
     )
-    
-    # 1. 主日志处理器：记录所有级别日志
-    main_log_file = LOG_DIR / f"{service_name}.log"
-    main_handler = TimedRotatingFileHandler(
-        filename=main_log_file,
-        when='midnight',       # 每天午夜轮换
-        interval=1,            # 间隔1天
-        backupCount=30,        # 保留30天日志
-        encoding='utf-8',      # UTF-8编码
-        delay=True             # 延迟创建文件，避免Windows文件锁定问题
-    )
-    main_handler.setFormatter(formatter)
+    main_handler.setFormatter(file_fmt)
     logger.addHandler(main_handler)
-    
-    # 2. 错误日志处理器：仅记录 ERROR 和 CRITICAL 级别
-    error_log_file = LOG_DIR / f"{service_name}.error.log"
-    error_handler = TimedRotatingFileHandler(
-        filename=error_log_file,
-        when='midnight',       # 每天午夜轮换
-        interval=1,            # 间隔1天
-        backupCount=30,        # 保留30天日志
-        encoding='utf-8',      # UTF-8编码
-        delay=True             # 延迟创建文件，避免Windows文件锁定问题
+
+    # 错误日志
+    err_file = LOG_DIR / f"{service_name}.error.log"
+    err_handler = SafeTimedRotatingFileHandler(
+        filename=str(err_file),
+        when="midnight",
+        interval=1,
+        backupCount=30,
+        encoding="utf-8",
+        delay=True
     )
-    error_handler.setFormatter(formatter)
-    error_handler.setLevel(logging.ERROR)  # 只处理 ERROR 及以上级别
-    logger.addHandler(error_handler)
-    
-    # 3. 控制台处理器：输出到控制台
+    err_handler.setLevel(logging.ERROR)
+    err_handler.setFormatter(file_fmt)
+    logger.addHandler(err_handler)
+
+    # 控制台彩色输出
     console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
+    console_handler.setFormatter(ColorFormatter())
     logger.addHandler(console_handler)
-    
-    # 设置自定义的日志轮换处理
-    _setup_log_rotation(service_name, main_handler)
-    _setup_log_rotation(f"{service_name}.error", error_handler)
-    
+
     return logger
 
-def _setup_log_rotation(base_name: str, handler: TimedRotatingFileHandler):
-    """
-    设置日志轮换处理，自动压缩旧日志
-    
-    Args:
-        base_name: 基础文件名（不含.log后缀）
-        handler: TimedRotatingFileHandler 实例
-    """
-    original_doRollover = handler.doRollover
-    
-    def custom_doRollover():
-        # 执行原始的日志轮换（带重试机制）
-        max_retries = 3
-        retry_delay = 1  # 秒
-        
-        for attempt in range(max_retries):
-            try:
-                original_doRollover()
-                break
-            except PermissionError as e:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                else:
-                    # 记录错误但不抛出，避免影响服务运行
-                    print(f"Log rotation failed after {max_retries} attempts: {e}")
-                    return
-        
-        # 获取所有备份日志文件
-        log_dir = LOG_DIR
-        backup_pattern = f"{base_name}.log.*"
-        
-        for backup_file in log_dir.glob(backup_pattern):
-            # 检查是否已经是压缩文件
-            if backup_file.suffix == '.zip':
-                continue
-            
-            # 检查是否已经处理过（以.processed结尾）
-            if backup_file.suffix == '.processed':
-                continue
-            
-            # 压缩备份文件
-            zip_filename = str(backup_file) + '.zip'
-            if not os.path.exists(zip_filename):
-                try:
-                    with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                        zipf.write(backup_file, backup_file.name)
-                    
-                    # 使用 shutil.move 替代 os.remove，更安全
-                    try:
-                        backup_file.unlink()
-                    except PermissionError:
-                        # 如果无法删除，标记为已处理
-                        try:
-                            temp_file = backup_file.with_suffix('.processed')
-                            shutil.move(str(backup_file), str(temp_file))
-                            temp_file.unlink()
-                        except Exception:
-                            # 如果仍然失败，跳过这个文件
-                            pass
-                except Exception as e:
-                    print(f"Failed to compress log file {backup_file}: {e}")
-    
-    handler.doRollover = custom_doRollover
+# ===================== 工具函数 =====================
+def clean_old_logs(days=30):
+    expire = datetime.now() - timedelta(days=days)
+    for f in LOG_DIR.glob("*.zip"):
+        try:
+            if datetime.fromtimestamp(f.stat().st_mtime) < expire:
+                f.unlink()
+        except Exception:
+            pass
 
-def rotate_and_compress(service_name: str):
-    """
-    手动触发日志轮换并压缩
-    
-    Args:
-        service_name: 服务名称
-    """
-    logger = logging.getLogger(service_name)
-    for handler in logger.handlers:
-        if isinstance(handler, TimedRotatingFileHandler):
-            handler.doRollover()
-
-def clean_old_logs(days_to_keep: int = 30):
-    """
-    清理指定天数前的日志文件
-    
-    Args:
-        days_to_keep: 保留天数，默认30天
-    """
-    cutoff_date = datetime.now() - timedelta(days=days_to_keep)
-    cutoff_str = cutoff_date.strftime('%Y-%m-%d')
-    
-    for zip_file in LOG_DIR.glob('*.zip'):
-        # 从文件名提取日期：服务名.log.YYYY-MM-DD.zip 或 服务名.error.log.YYYY-MM-DD.zip
-        filename = zip_file.name
-        
-        # 尝试提取日期部分
-        date_str = None
-        
-        # 模式1: gateway.log.2024-01-01.zip
-        parts = filename.split('.')
-        if len(parts) >= 4 and parts[-2] == 'log':
-            date_str = parts[-3]
-        # 模式2: gateway.error.log.2024-01-01.zip
-        elif len(parts) >= 5 and parts[-2] == 'log':
-            date_str = parts[-3]
-        
-        if date_str and date_str < cutoff_str:
-            try:
-                zip_file.unlink()
-                print(f"Deleted old log: {zip_file}")
-            except Exception as e:
-                print(f"Failed to delete old log {zip_file}: {e}")
-
-def get_log_file_path(service_name: str, error_log: bool = False) -> str:
-    """
-    获取服务日志文件路径
-    
-    Args:
-        service_name: 服务名称
-        error_log: 是否获取错误日志路径
-    
-    Returns:
-        日志文件的绝对路径
-    """
-    if error_log:
-        return str(LOG_DIR / f"{service_name}.error.log")
-    return str(LOG_DIR / f"{service_name}.log")
-
-def get_log_stats(service_name: str):
-    """
-    获取日志文件统计信息
-    
-    Args:
-        service_name: 服务名称
-    
-    Returns:
-        包含日志文件大小、最近修改时间等信息的字典
-    """
-    log_file = LOG_DIR / f"{service_name}.log"
-    error_log_file = LOG_DIR / f"{service_name}.error.log"
-    
-    stats = {
-        'service': service_name,
-        'main_log': None,
-        'error_log': None
-    }
-    
-    if log_file.exists():
-        stats['main_log'] = {
-            'exists': True,
-            'size': log_file.stat().st_size,
-            'size_human': _format_size(log_file.stat().st_size),
-            'last_modified': datetime.fromtimestamp(log_file.stat().st_mtime).isoformat(),
-            'file_path': str(log_file)
-        }
-    else:
-        stats['main_log'] = {
-            'exists': False,
-            'size': 0,
-            'size_human': '0 B',
-            'last_modified': None,
-            'file_path': str(log_file)
-        }
-    
-    if error_log_file.exists():
-        stats['error_log'] = {
-            'exists': True,
-            'size': error_log_file.stat().st_size,
-            'size_human': _format_size(error_log_file.stat().st_size),
-            'last_modified': datetime.fromtimestamp(error_log_file.stat().st_mtime).isoformat(),
-            'file_path': str(error_log_file)
-        }
-    else:
-        stats['error_log'] = {
-            'exists': False,
-            'size': 0,
-            'size_human': '0 B',
-            'last_modified': None,
-            'file_path': str(error_log_file)
-        }
-    
-    return stats
-
-def _format_size(bytes_size: int) -> str:
-    """
-    将字节转换为人类可读的格式
-    
-    Args:
-        bytes_size: 字节数
-    
-    Returns:
-        人类可读的大小字符串
-    """
-    if bytes_size < 1024:
-        return f"{bytes_size} B"
-    elif bytes_size < 1024 * 1024:
-        return f"{bytes_size / 1024:.2f} KB"
-    elif bytes_size < 1024 * 1024 * 1024:
-        return f"{bytes_size / (1024 * 1024):.2f} MB"
-    else:
-        return f"{bytes_size / (1024 * 1024 * 1024):.2f} GB"
-
-# 创建系统服务的默认日志记录器
-logger = setup_logger('system')
+# ===================== 默认实例 =====================
+logger = setup_logger("system")
