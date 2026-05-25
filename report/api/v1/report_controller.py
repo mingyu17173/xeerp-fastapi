@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: report_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from fastapi import APIRouter, Depends
 from service.report_service import ReportService
 from schemas.report_schema import (

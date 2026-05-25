@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "🛑 停止所有 Python 微服务..."
+pkill -f "python.*main.py"
+pkill -f "python.*system.py"
+pkill -f "python.*product.py"
+pkill -f "python.*stock.py"
+pkill -f "python.*sales.py"
+pkill -f "python.*production.py"
+pkill -f "python.*purchase.py"
+pkill -f "python.*partner.py"
+pkill -f "python.*report.py"
+echo "✅ 所有服务已停止"

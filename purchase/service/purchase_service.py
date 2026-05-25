@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: purchase_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.purchase_dao import PurchaseDao
 from schemas.purchase import PurchaseOrderModel, PurchaseItemModel, AddPurchaseOrderModel, PurchasePageQueryModel

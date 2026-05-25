@@ -1,9 +1,16 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: warehouse_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.get_db import get_db
-from service.warehouse_service import WarehouseService
-from schemas.warehouse_schema import WarehouseModel, AddWarehouseModel, EditWarehouseModel, WarehousePageQueryModel
-from schemas.common_schema import CrudResponseModel, PageResponseModel
+from ...core.get_db import get_db
+from ...service.warehouse_service import WarehouseService
+from ...schemas.warehouse_schema import WarehouseModel, AddWarehouseModel, EditWarehouseModel, WarehousePageQueryModel
+from ...schemas.common_schema import CrudResponseModel, PageResponseModel
 
 router = APIRouter(prefix='/warehouse', tags=['仓库管理'])
 

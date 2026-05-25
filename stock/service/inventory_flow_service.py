@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: inventory_flow_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from dao.inventory_flow_dao import InventoryFlowDao

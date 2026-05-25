@@ -1,7 +1,9 @@
-"""
-Gateway Service Logger Configuration
-网关服务日志配置
-"""
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: logger.py
+# @Software: PyCharm
+# @Desc : 核心配置
 
 import sys
 import os
@@ -11,5 +13,5 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from utils.log_util import setup_logger
 
-# 创建网关服务日志记录器
+# 创建订单服务日志记录器
 logger = setup_logger('gateway')

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: menu_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from datetime import datetime
 from fastapi import APIRouter, Depends, Request
 from pydantic_validation_decorator import ValidateFields

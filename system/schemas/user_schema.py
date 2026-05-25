@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: user_schema.py
+# @Software: PyCharm
+# @Desc : 数据模式
+
 import re
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, model_validator

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: production_issue_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from datetime import datetime
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +16,7 @@ from dao.bom_dao import BomDao
 from models.production_issue import SysProductionIssue, SysProductionIssueItem
 from schemas.common_schema import CrudResponseModel, PageResponseModel
 from schemas.production_issue_schema import ProductionIssueModel, AddProductionIssueModel, ProductionIssuePageQueryModel
-from core.env import AppConfig
+from core.production_env import AppConfig
 
 class ProductionIssueService:
     @classmethod

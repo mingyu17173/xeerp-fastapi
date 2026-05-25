@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: approval_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.approval_dao import ApprovalDao

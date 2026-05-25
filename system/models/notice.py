@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: notice.py
+# @Software: PyCharm
+# @Desc : 数据模型
+
 from datetime import datetime
 from sqlalchemy import CHAR, Column, DateTime, Integer, LargeBinary, String
 from sqlalchemy.dialects import mysql

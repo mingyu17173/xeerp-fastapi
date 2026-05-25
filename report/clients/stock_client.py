@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: stock_client.py
+# @Software: PyCharm
+# @Desc : 模块文件
+
 from typing import Any, Dict, Optional, Tuple
 from clients.base_client import BaseClient
 from core.env import AppConfig

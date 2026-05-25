@@ -1,24 +1,45 @@
-from core.database import async_engine, AsyncSessionLocal, Base
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: get_db.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
+from .database import async_engine, AsyncSessionLocal, Base
 from utils.log_util import logger
+from .system_env import DataBaseConfig
 
 
 async def get_db():
     """
-    每一个请求处理完毕后会关闭当前连接，不同的请求使用不同的连接
-
-    :return:
-    """
-    async with AsyncSessionLocal() as current_db:
-        yield current_db
+       FastAPI 依赖：获取异步数据库会话
+       每个请求独立连接，请求结束自动关闭
+       """
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        except Exception as e:
+            await session.rollback()
+            raise e
+        finally:
+            await session.close()
 
 
 async def init_create_table():
     """
-    应用启动时初始化数据库连接
-
-    :return:
+    项目启动时自动创建表（如果不存在）
+    支持 MySQL / PostgreSQL 自动识别
     """
-    logger.info('🔎 初始化数据库连接...')
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info('✅️ 数据库连接成功')
+    try:
+        db_type = DataBaseConfig.db_type.upper()
+        logger.info(f"🔎 正在初始化 {db_type} 数据库连接...")
+
+        async with async_engine.begin() as conn:
+            # 自动创建所有表
+            await conn.run_sync(Base.metadata.create_all)
+
+        logger.info(f"✅ {db_type} 数据库连接成功，表结构初始化完成！")
+
+    except Exception as e:
+        logger.error(f"❌ 数据库初始化失败：{str(e)}")
+        raise  # 启动失败直接退出

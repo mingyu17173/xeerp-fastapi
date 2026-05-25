@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: production_scrap_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from datetime import datetime
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +14,7 @@ from dao.production_scrap_dao import ProductionScrapDao
 from models.production_scrap import SysProductionScrap, SysProductionScrapItem
 from schemas.common_schema import CrudResponseModel, PageResponseModel
 from schemas.production_scrap_schema import ProductionScrapModel, AddProductionScrapModel, ProductionScrapPageQueryModel
-from core.env import AppConfig
+from core.production_env import AppConfig
 
 class ProductionScrapService:
     @classmethod

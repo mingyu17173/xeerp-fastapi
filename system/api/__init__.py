@@ -1,25 +1,32 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: __init__.py
+# @Software: PyCharm
+# @Desc : API模块
+
 from fastapi import APIRouter, FastAPI
 
 # 系统基础配置(system)
-from api.v1.cache_controller import cacheController
-from api.v1.captcha_controller import captchaController
-from api.v1.common_controller import commonController
-from api.v1.config_controller import configController
-from api.v1.dept_controller import deptController
-from api.v1.dict_controller import dictController
-from api.v1.log_controller import logController
-from api.v1.login_controller import loginController
-from api.v1.job_controller import jobController
-from api.v1.menu_controller import menuController
-from api.v1.notice_controller import noticeController
-from api.v1.online_controller import onlineController
-from api.v1.post_controler import postController
-from api.v1.role_controller import roleController
-from api.v1.server_controller import serverController
-from api.v1.user_controller import userController
-from api.v1.region_controller import regionController
+from .v1.cache_controller import cacheController
+from .v1.captcha_controller import captchaController
+from .v1.common_controller import commonController
+from .v1.config_controller import configController
+from .v1.dept_controller import deptController
+from .v1.dict_controller import dictController
+from .v1.log_controller import logController
+from .v1.login_controller import loginController
+from .v1.job_controller import jobController
+from .v1.menu_controller import menuController
+from .v1.notice_controller import noticeController
+from .v1.online_controller import onlineController
+from .v1.post_controler import postController
+from .v1.role_controller import roleController
+from .v1.server_controller import serverController
+from .v1.user_controller import userController
+from .v1.region_controller import regionController
 
-# from api.gen.gen_controller import genController
+# from .gen.gen_controller import genController
 
 v1 = APIRouter()
 
