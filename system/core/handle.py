@@ -1,7 +1,14 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: handle.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 from fastapi import FastAPI, Request
 from fastapi.exceptions import HTTPException
 from pydantic_validation_decorator import FieldValidationError
-from core.exception import (
+from .exception import (
     AuthException,
     LoginException,
     ModelValidatorException,

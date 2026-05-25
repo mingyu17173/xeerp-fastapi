@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: production_receipt_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from datetime import datetime
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +15,7 @@ from dao.production_plan_dao import ProductionPlanDao
 from models.production_receipt import SysProductionReceipt
 from schemas.common_schema import CrudResponseModel, PageResponseModel
 from schemas.production_receipt_schema import ProductionReceiptModel, AddProductionReceiptModel, ProductionReceiptPageQueryModel
-from core.env import AppConfig
+from core.production_env import AppConfig
 
 class ProductionReceiptService:
     @classmethod

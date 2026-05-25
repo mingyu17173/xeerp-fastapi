@@ -1,5 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: exception.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 from typing import Optional, Dict, Any
 from core.enums import ErrorCode
+
 
 class BaseException(Exception):
     """
@@ -40,7 +48,7 @@ class LoginException(BaseException):
     自定义登录异常LoginException
     """
 
-    def __init__(self, message: str = "登录失败", data: Optional[Dict[str, Any]] = None,  details: Optional[str] = None ):
+    def __init__(self, message: str = "登录失败", data: Optional[Dict[str, Any]] = None, details: Optional[str] = None):
         super().__init__(error_code=ErrorCode.LOGIN_FAILED, message=message, data=data, http_status=401, details=details)
 
 

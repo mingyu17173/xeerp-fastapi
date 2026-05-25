@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: handle.py
+# @Software: PyCharm
+# @Desc : 中间件
+
 from fastapi import FastAPI
 from middlewares.cors_middleware import add_cors_middleware
 from middlewares.gzip_middleware import add_gzip_middleware

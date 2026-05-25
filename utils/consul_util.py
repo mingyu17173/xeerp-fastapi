@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: consul_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
 """
 Consul 服务注册与发现工具类
 基于 python-consul 库实现微服务注册、发现和健康检查
@@ -8,6 +15,7 @@ import random
 from typing import Optional, List, Dict, Any
 import consul
 from consul import Check
+from utils.log_util import logger
 
 class ConsulUtil:
     """
@@ -39,10 +47,10 @@ class ConsulUtil:
             
             # 测试连接
             cls._client.agent.self()
-            print(f"✅ Consul 客户端初始化成功：http://{host}:{port}")
+            logger.info(f"✅ Consul 客户端初始化成功：http://{host}:{port}")
             return True
         except Exception as e:
-            print(f"❌ Consul 客户端初始化失败: {str(e)}")
+            logger.error(f"✅ Consul 客户端初始化失败：{str(e)}")
             return False
     
     @classmethod
@@ -146,12 +154,11 @@ class ConsulUtil:
                 "ip": local_ip,
                 "port": port
             }
-            
-            print(f"✅ 服务 {service_name} 注册成功: {local_ip}:{port}")
+            logger.info(f"✅ 服务 {service_name} 注册成功: {local_ip}:{port}")
             return True
             
         except Exception as e:
-            print(f"❌ 服务 {service_name} 注册失败: {str(e)}")
+            logger.error(f"❌ 服务 {service_name} 注册失败: {str(e)}")
             import traceback
             traceback.print_exc()
             return False
@@ -179,7 +186,7 @@ class ConsulUtil:
                 target_service_id = cls._registered_services[service_name]["service_id"]
             
             if not target_service_id:
-                print(f"⚠️  未找到服务 {service_name} 的注册信息")
+                logger.info(f"⚠️  未找到服务 {service_name} 的注册信息")
                 return False
             
             client.agent.service.deregister(target_service_id)
@@ -187,12 +194,12 @@ class ConsulUtil:
             # 从已注册列表中移除
             if service_name in cls._registered_services:
                 del cls._registered_services[service_name]
-            
-            print(f"✅ 服务 {service_name} 注销成功")
+
+            logger.info(f"✅ 服务 {service_name} 注销成功")
             return True
             
         except Exception as e:
-            print(f"❌ 服务 {service_name} 注销失败: {str(e)}")
+            logger.error(f"❌ 服务 {service_name} 注销失败: {str(e)}")
             return False
     
     @classmethod
@@ -231,7 +238,7 @@ class ConsulUtil:
                 instances.append(instance)
             
         except Exception as e:
-            print(f"❌ 获取服务实例失败: {str(e)}")
+            logger.error(f"❌ 获取服务实例失败: {str(e)}")
         
         return instances
     
@@ -250,7 +257,7 @@ class ConsulUtil:
         instances = cls.get_service_instances(service_name, healthy_only=True)
         
         if not instances:
-            print(f"⚠️  未找到健康的 {service_name} 服务实例")
+            logger.error(f"⚠️  未找到健康的 {service_name} 服务实例")
             return None
         
         if strategy == "random":
@@ -307,7 +314,7 @@ class ConsulUtil:
             return list(services.keys())
         
         except Exception as e:
-            print(f"❌ 获取服务列表失败: {str(e)}")
+            logger.error(f"❌ 获取服务列表失败: {str(e)}")
             return []
     
     @classmethod
@@ -334,7 +341,7 @@ class ConsulUtil:
                 status[check["ServiceID"]] = check["Status"]
             
         except Exception as e:
-            print(f"❌ 获取健康状态失败: {str(e)}")
+            logger.error(f"❌ 获取健康状态失败: {str(e)}")
         
         return status
     
@@ -359,7 +366,7 @@ class ConsulUtil:
             return True
             
         except Exception as e:
-            print(f"❌ 设置配置失败: {str(e)}")
+            logger.error(f"❌ 设置配置失败: {str(e)}")
             return False
     
     @classmethod
@@ -382,7 +389,7 @@ class ConsulUtil:
             return data["Value"].decode('utf-8') if data else None
             
         except Exception as e:
-            print(f"❌ 获取配置失败: {str(e)}")
+            logger.error(f"❌ 获取配置失败: {str(e)}")
             return None
     
     @classmethod

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: login_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 import jwt
 import uuid
 from datetime import datetime, timedelta

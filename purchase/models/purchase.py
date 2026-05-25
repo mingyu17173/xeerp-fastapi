@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: purchase.py
+# @Software: PyCharm
+# @Desc : 数据模型
+
 from sqlalchemy import Column, Integer, String, Enum, Text, Boolean, DateTime, Float, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship

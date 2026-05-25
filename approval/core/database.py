@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: database.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 """
 数据库配置模块
 """

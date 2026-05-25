@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: pydantic_annotation.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 import inspect
 from fastapi import Form, Query
 from pydantic import BaseModel

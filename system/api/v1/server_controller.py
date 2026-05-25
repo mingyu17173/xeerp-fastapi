@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: server_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from fastapi import APIRouter, Depends, Request
 from core.aspect.interface_auth import CheckUserInterfaceAuth
 from schemas.server_schema import ServerMonitorModel

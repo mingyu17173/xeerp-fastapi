@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: page_util.py
+# @Software: PyCharm
+# @Desc : 工具类
+
 import math
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: data_scope.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 from fastapi import Depends
 from typing import Optional
 from schemas.user_schema import CurrentUserModel
