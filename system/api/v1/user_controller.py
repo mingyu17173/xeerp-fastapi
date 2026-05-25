@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: user_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: user_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -38,18 +38,17 @@ from service.login_service import LoginService
 from service.user_service import UserService
 from service.role_service import RoleService
 from service.dept_service import DeptService
-from utils.common_util import bytes2file_response
-from utils.log_util import logger
-from utils.page_util import PageResponseModel
-from utils.pwd_util import PwdUtil
-from utils.response_util import ResponseUtil
-from utils.upload_util import UploadUtil
+from common.utils.common_util import bytes2file_response
+from common.utils.log_util import logger
+from common.utils.page_util import PageResponseModel
+from common.utils.pwd_util import PwdUtil
+from common.utils.response_util import ResponseUtil
+from common.utils.upload_util import UploadUtil
 
 
-userController = APIRouter(prefix='/system/user', dependencies=[Depends(LoginService.get_current_user)])
+userRoute = APIRouter(prefix='/system/user', dependencies=[Depends(LoginService.get_current_user)])
 
-
-@userController.get('/deptTree', dependencies=[Depends(CheckUserInterfaceAuth('system:user:list'))])
+@userRoute.get('/deptTree', dependencies=[Depends(CheckUserInterfaceAuth('system:user:list'))])
 async def get_system_dept_tree(
     request: Request, query_db: AsyncSession = Depends(get_db), data_scope_sql: str = Depends(GetDataScope('SysDept'))
 ):
@@ -59,8 +58,10 @@ async def get_system_dept_tree(
     return ResponseUtil.success(data=dept_query_result)
 
 
-@userController.get(
-    '/list', response_model=PageResponseModel, dependencies=[Depends(CheckUserInterfaceAuth('system:user:list'))]
+@userRoute.get(
+    '/list', 
+    response_model=PageResponseModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:user:list'))]
 )
 async def get_system_user_list(
     request: Request,
@@ -77,7 +78,7 @@ async def get_system_user_list(
     return ResponseUtil.success(model_content=user_page_query_result)
 
 
-@userController.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:user:add'))])
+@userRoute.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:user:add'))])
 @ValidateFields(validate_model='add_user')
 @Log(title='用户管理', business_type=BusinessType.INSERT)
 async def add_system_user(
@@ -104,7 +105,7 @@ async def add_system_user(
     return ResponseUtil.success(msg=add_user_result.message)
 
 
-@userController.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:user:edit'))])
+@userRoute.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:user:edit'))])
 @ValidateFields(validate_model='edit_user')
 @Log(title='用户管理', business_type=BusinessType.UPDATE)
 async def edit_system_user(
@@ -131,7 +132,7 @@ async def edit_system_user(
     return ResponseUtil.success(msg=edit_user_result.message)
 
 
-@userController.delete('/{user_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:user:remove'))])
+@userRoute.delete('/{user_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:user:remove'))])
 @Log(title='用户管理', business_type=BusinessType.DELETE)
 async def delete_system_user(
     request: Request,
@@ -157,7 +158,7 @@ async def delete_system_user(
     return ResponseUtil.success(msg=delete_user_result.message)
 
 
-@userController.put('/resetPwd', dependencies=[Depends(CheckUserInterfaceAuth('system:user:resetPwd'))])
+@userRoute.put('/resetPwd', dependencies=[Depends(CheckUserInterfaceAuth('system:user:resetPwd'))])
 @Log(title='用户管理', business_type=BusinessType.UPDATE)
 async def reset_system_user_pwd(
     request: Request,
@@ -183,7 +184,7 @@ async def reset_system_user_pwd(
     return ResponseUtil.success(msg=edit_user_result.message)
 
 
-@userController.put('/changeStatus', dependencies=[Depends(CheckUserInterfaceAuth('system:user:edit'))])
+@userRoute.put('/changeStatus', dependencies=[Depends(CheckUserInterfaceAuth('system:user:edit'))])
 @Log(title='用户管理', business_type=BusinessType.UPDATE)
 async def change_system_user_status(
     request: Request,
@@ -208,7 +209,7 @@ async def change_system_user_status(
     return ResponseUtil.success(msg=edit_user_result.message)
 
 
-@userController.get('/profile', response_model=UserProfileModel)
+@userRoute.get('/profile', response_model=UserProfileModel)
 async def query_detail_system_user_profile(
     request: Request,
     query_db: AsyncSession = Depends(get_db),
@@ -220,11 +221,15 @@ async def query_detail_system_user_profile(
     return ResponseUtil.success(model_content=profile_user_result)
 
 
-@userController.get(
-    '/{user_id}', response_model=UserDetailModel, dependencies=[Depends(CheckUserInterfaceAuth('system:user:query'))]
+@userRoute.get(
+    '/{user_id}', 
+    response_model=UserDetailModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:user:query'))]
 )
-@userController.get(
-    '/', response_model=UserDetailModel, dependencies=[Depends(CheckUserInterfaceAuth('system:user:query'))]
+@userRoute.get(
+    '/', 
+    response_model=UserDetailModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:user:query'))]
 )
 async def query_detail_system_user(
     request: Request,
@@ -241,7 +246,7 @@ async def query_detail_system_user(
     return ResponseUtil.success(model_content=detail_user_result)
 
 
-@userController.post('/profile/avatar')
+@userRoute.post('/profile/avatar')
 @Log(title='个人信息', business_type=BusinessType.UPDATE)
 async def change_system_user_profile_avatar(
     request: Request,
@@ -276,7 +281,7 @@ async def change_system_user_profile_avatar(
     return ResponseUtil.failure(msg='上传图片异常，请联系管理员')
 
 
-@userController.put('/profile')
+@userRoute.put('/profile')
 @Log(title='个人信息', business_type=BusinessType.UPDATE)
 async def change_system_user_profile_info(
     request: Request,
@@ -300,7 +305,7 @@ async def change_system_user_profile_info(
     return ResponseUtil.success(msg=edit_user_result.message)
 
 
-@userController.put('/profile/updatePwd')
+@userRoute.put('/profile/updatePwd')
 @Log(title='个人信息', business_type=BusinessType.UPDATE)
 async def reset_system_user_password(
     request: Request,
@@ -322,7 +327,7 @@ async def reset_system_user_password(
     return ResponseUtil.success(msg=reset_user_result.message)
 
 
-@userController.post('/importData', dependencies=[Depends(CheckUserInterfaceAuth('system:user:import'))])
+@userRoute.post('/importData', dependencies=[Depends(CheckUserInterfaceAuth('system:user:import'))])
 @Log(title='用户管理', business_type=BusinessType.IMPORT)
 async def batch_import_system_user(
     request: Request,
@@ -341,7 +346,7 @@ async def batch_import_system_user(
     return ResponseUtil.success(msg=batch_import_result.message)
 
 
-@userController.post('/importTemplate', dependencies=[Depends(CheckUserInterfaceAuth('system:user:import'))])
+@userRoute.post('/importTemplate', dependencies=[Depends(CheckUserInterfaceAuth('system:user:import'))])
 async def export_system_user_template(request: Request, query_db: AsyncSession = Depends(get_db)):
     user_import_template_result = await UserService.get_user_import_template_services()
     logger.info('获取成功')
@@ -349,7 +354,7 @@ async def export_system_user_template(request: Request, query_db: AsyncSession =
     return ResponseUtil.streaming(data=bytes2file_response(user_import_template_result))
 
 
-@userController.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:user:export'))])
+@userRoute.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:user:export'))])
 @Log(title='用户管理', business_type=BusinessType.EXPORT)
 async def export_system_user_list(
     request: Request,
@@ -367,7 +372,7 @@ async def export_system_user_list(
     return ResponseUtil.streaming(data=bytes2file_response(user_export_result))
 
 
-@userController.get(
+@userRoute.get(
     '/authRole/{user_id}',
     response_model=UserRoleResponseModel,
     dependencies=[Depends(CheckUserInterfaceAuth('system:user:query'))],
@@ -382,7 +387,7 @@ async def get_system_allocated_role_list(request: Request, user_id: int, query_d
     return ResponseUtil.success(model_content=user_role_allocated_query_result)
 
 
-@userController.put(
+@userRoute.put(
     '/authRole',
     response_model=UserRoleResponseModel,
     dependencies=[Depends(CheckUserInterfaceAuth('system:user:edit'))],

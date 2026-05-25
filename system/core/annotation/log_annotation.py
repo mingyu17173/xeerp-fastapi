@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: log_annotation.py
 # @Software: PyCharm
 # @Desc : 核心配置
@@ -24,7 +24,7 @@ from core.exception import LoginException, ServiceException, ServiceWarning
 from schemas.log_schema import LogininforModel, OperLogModel
 from service.log_service import LoginLogService, OperationLogService
 from service.login_service import LoginService
-from utils.log_util import logger
+from common.utils.log_util import logger
 from utils.response_util import ResponseUtil
 
 

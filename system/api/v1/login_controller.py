@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: login_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: login_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -20,14 +20,13 @@ from schemas.login_schema import UserLogin, UserLoginJson, UserRegister, Token
 from schemas.user_schema import CurrentUserModel, EditUserModel
 from service.login_service import CustomOAuth2PasswordRequestForm, LoginService, oauth2_scheme
 from service.user_service import UserService
-from utils.log_util import logger
-from utils.response_util import ResponseUtil
+from common.utils.log_util import logger
+from common.utils.response_util import ResponseUtil
 
 
-loginController = APIRouter()
+loginRoute = APIRouter()
 
-
-@loginController.post('/login', response_model=Token)
+@loginRoute.post('/login', response_model=Token)
 @Log(title='用户登录', business_type=BusinessType.OTHER, log_type='login')
 async def login_json(
     request: Request, login_data: UserLoginJson, query_db: AsyncSession = Depends(get_db)
@@ -86,7 +85,7 @@ async def login_json(
 
 
 # 保留原有的Form格式登录接口（用于Swagger UI认证）
-@loginController.post('/login/form', response_model=Token, include_in_schema=False)
+@loginRoute.post('/login/form', response_model=Token, include_in_schema=False)
 @Log(title='用户登录', business_type=BusinessType.OTHER, log_type='login')
 async def login(
     request: Request, form_data: CustomOAuth2PasswordRequestForm = Depends(), query_db: AsyncSession = Depends(get_db)
@@ -143,7 +142,7 @@ async def login(
     return ResponseUtil.success(msg='登录成功', dict_content={'token': access_token})
 
 
-@loginController.get('/getInfo', response_model=CurrentUserModel)
+@loginRoute.get('/getInfo', response_model=CurrentUserModel)
 async def get_login_user_info(
     request: Request, current_user: CurrentUserModel = Depends(LoginService.get_current_user)
 ):
@@ -152,7 +151,7 @@ async def get_login_user_info(
     return ResponseUtil.success(model_content=current_user)
 
 
-@loginController.get('/getRouters')
+@loginRoute.get('/getRouters')
 async def get_login_user_routers(
     request: Request,
     current_user: CurrentUserModel = Depends(LoginService.get_current_user),
@@ -164,7 +163,7 @@ async def get_login_user_routers(
     return ResponseUtil.success(data=user_routers)
 
 
-@loginController.post('/register', response_model=CrudResponseModel)
+@loginRoute.post('/register', response_model=CrudResponseModel)
 async def register_user(request: Request, user_register: UserRegister, query_db: AsyncSession = Depends(get_db)):
     user_register_result = await LoginService.register_user_services(request, query_db, user_register)
     logger.info(user_register_result.message)
@@ -172,7 +171,7 @@ async def register_user(request: Request, user_register: UserRegister, query_db:
     return ResponseUtil.success(data=user_register_result, msg=user_register_result.message)
 
 
-# @loginController.post("/getSmsCode", response_model=SmsCode)
+# @loginRoute.post("/getSmsCode", response_model=SmsCode)
 # async def get_sms_code(request: Request, user: ResetUserModel, query_db: AsyncSession = Depends(get_db)):
 #     try:
 #         sms_result = await LoginService.get_sms_code_services(request, query_db, user)
@@ -187,7 +186,7 @@ async def register_user(request: Request, user_register: UserRegister, query_db:
 #         return ResponseUtil.error(msg=str(e))
 #
 #
-# @loginController.post("/forgetPwd", response_model=CrudResponseModel)
+# @loginRoute.post("/forgetPwd", response_model=CrudResponseModel)
 # async def forget_user_pwd(request: Request, forget_user: ResetUserModel, query_db: AsyncSession = Depends(get_db)):
 #     try:
 #         forget_user_result = await LoginService.forget_user_services(request, query_db, forget_user)
@@ -202,7 +201,7 @@ async def register_user(request: Request, user_register: UserRegister, query_db:
 #         return ResponseUtil.error(msg=str(e))
 
 
-@loginController.post('/logout')
+@loginRoute.post('/logout')
 async def logout(request: Request, token: Optional[str] = Depends(oauth2_scheme)):
     payload = jwt.decode(
         token, JwtConfig.jwt_secret_key, algorithms=[JwtConfig.jwt_algorithm], options={'verify_exp': False}

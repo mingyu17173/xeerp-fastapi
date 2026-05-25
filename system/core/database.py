@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: database.py
 # @Software: PyCharm
 # @Desc : 核心配置
@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase
 from urllib.parse import quote_plus
-from .system_env import DataBaseConfig
+from core.system_env import DataBaseConfig
 
 
 # ====================== 【自动】构建异步数据库连接URL ======================

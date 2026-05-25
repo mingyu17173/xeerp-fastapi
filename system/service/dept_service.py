@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: dept_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -11,7 +11,7 @@ from core.exception import ServiceException, ServiceWarning
 from dao.dept_dao import DeptDao
 from schemas.common_schema import CrudResponseModel
 from schemas.dept_schema import DeleteDeptModel, DeptModel
-from utils.common_util import CamelCaseUtil
+from common.utils.common_util import CamelCaseUtil
 
 
 class DeptService:

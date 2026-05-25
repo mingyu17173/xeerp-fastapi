@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: notice_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: notice_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -17,16 +17,17 @@ from schemas.notice_schema import DeleteNoticeModel, NoticeModel, NoticePageQuer
 from schemas.user_schema import CurrentUserModel
 from service.login_service import LoginService
 from service.notice_service import NoticeService
-from utils.log_util import logger
-from utils.page_util import PageResponseModel
-from utils.response_util import ResponseUtil
+from common.utils.log_util import logger
+from common.utils.page_util import PageResponseModel
+from common.utils.response_util import ResponseUtil
 
 
-noticeController = APIRouter(prefix='/system/notice', dependencies=[Depends(LoginService.get_current_user)])
+noticeRoute = APIRouter(prefix='/system/notice', dependencies=[Depends(LoginService.get_current_user)])
 
-
-@noticeController.get(
-    '/list', response_model=PageResponseModel, dependencies=[Depends(CheckUserInterfaceAuth('system:notice:list'))]
+@noticeRoute.get(
+    '/list', 
+    response_model=PageResponseModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:notice:list'))]
 )
 async def get_system_notice_list(
     request: Request,
@@ -36,11 +37,10 @@ async def get_system_notice_list(
     # 获取分页数据
     notice_page_query_result = await NoticeService.get_notice_list_services(query_db, notice_page_query, is_page=True)
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=notice_page_query_result)
 
 
-@noticeController.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:add'))])
+@noticeRoute.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:add'))])
 @ValidateFields(validate_model='add_notice')
 @Log(title='通知公告', business_type=BusinessType.INSERT)
 async def add_system_notice(
@@ -55,11 +55,10 @@ async def add_system_notice(
     add_notice.update_time = datetime.now()
     add_notice_result = await NoticeService.add_notice_services(query_db, add_notice)
     logger.info(add_notice_result.message)
-
     return ResponseUtil.success(msg=add_notice_result.message)
 
 
-@noticeController.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:edit'))])
+@noticeRoute.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:edit'))])
 @ValidateFields(validate_model='edit_notice')
 @Log(title='通知公告', business_type=BusinessType.UPDATE)
 async def edit_system_notice(
@@ -72,25 +71,24 @@ async def edit_system_notice(
     edit_notice.update_time = datetime.now()
     edit_notice_result = await NoticeService.edit_notice_services(query_db, edit_notice)
     logger.info(edit_notice_result.message)
-
     return ResponseUtil.success(msg=edit_notice_result.message)
 
 
-@noticeController.delete('/{notice_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:remove'))])
+@noticeRoute.delete('/{notice_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:notice:remove'))])
 @Log(title='通知公告', business_type=BusinessType.DELETE)
 async def delete_system_notice(request: Request, notice_ids: str, query_db: AsyncSession = Depends(get_db)):
     delete_notice = DeleteNoticeModel(noticeIds=notice_ids)
     delete_notice_result = await NoticeService.delete_notice_services(query_db, delete_notice)
     logger.info(delete_notice_result.message)
-
     return ResponseUtil.success(msg=delete_notice_result.message)
 
 
-@noticeController.get(
-    '/{notice_id}', response_model=NoticeModel, dependencies=[Depends(CheckUserInterfaceAuth('system:notice:query'))]
+@noticeRoute.get(
+    '/{notice_id}', 
+    response_model=NoticeModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:notice:query'))]
 )
 async def query_detail_system_post(request: Request, notice_id: int, query_db: AsyncSession = Depends(get_db)):
     notice_detail_result = await NoticeService.notice_detail_services(query_db, notice_id)
     logger.info(f'获取notice_id为{notice_id}的信息成功')
-
     return ResponseUtil.success(data=notice_detail_result)

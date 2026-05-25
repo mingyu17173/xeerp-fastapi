@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: system.py
 # @Software: PyCharm
 # @Desc : 模块文件
-
+import os
+import sys
 import uvicorn
 import orjson
+from pathlib import Path
+
+SERVICE_ROOT = Path(__file__).parent
+PROJECT_ROOT = SERVICE_ROOT.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(SERVICE_ROOT))
+
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from core.system_env import AppConfig
@@ -18,7 +26,6 @@ from core.get_scheduler import SchedulerUtil
 from core.handle import handle_exception
 from core.mounts.handle import handle_sub_applications
 from middlewares.handle import handle_middleware
-
 from utils.consul_util import ConsulUtil
 
 
@@ -81,6 +88,30 @@ handle_middleware(app)
 handle_exception(app)
 
 
+# ==========================
+# 🔥 智能配置
+# ==========================
+WORKERS = 1
+LOOP = "asyncio"
+HTTP = "auto"
+
+# Linux 自动开启高性能
+if os.name == "posix":
+    WORKERS = 1
+    # 网关服务加大
+    if "gateway" in str(SERVICE_ROOT):
+        WORKERS = 2
+    LOOP = "uvloop"
+    HTTP = "httptools"
+
 
 if __name__ == "__main__":
-    uvicorn.run("system:app", host=AppConfig.app_host, port=AppConfig.app_port, reload=True)
+    uvicorn.run(
+        "system:app",
+        host=AppConfig.app_host,
+        port=AppConfig.app_port,
+        # workers=WORKERS,
+        loop=LOOP,   #  Windows 注释掉！
+        http=HTTP,   #  Windows 注释掉！
+        log_level="warning",
+        reload=True)

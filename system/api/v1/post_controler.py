@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: post_controler.py
 # @Software: PyCharm
 # @Desc : API模块
@@ -17,16 +17,15 @@ from service.login_service import LoginService
 from service.post_service import PostService
 from schemas.post_schema import DeletePostModel, PostModel, PostPageQueryModel
 from schemas.user_schema import CurrentUserModel
-from utils.common_util import bytes2file_response
-from utils.log_util import logger
-from utils.page_util import PageResponseModel
-from utils.response_util import ResponseUtil
+from common.utils.common_util import bytes2file_response
+from common.utils.log_util import logger
+from common.utils.page_util import PageResponseModel
+from common.utils.response_util import ResponseUtil
 
 
-postController = APIRouter(prefix='/system/post', dependencies=[Depends(LoginService.get_current_user)])
+postRoute = APIRouter(prefix='/system/post', dependencies=[Depends(LoginService.get_current_user)])
 
-
-@postController.get(
+@postRoute.get(
     '/list', response_model=PageResponseModel, dependencies=[Depends(CheckUserInterfaceAuth('system:post:list'))]
 )
 async def get_system_post_list(
@@ -37,11 +36,10 @@ async def get_system_post_list(
     # 获取分页数据
     post_page_query_result = await PostService.get_post_list_services(query_db, post_page_query, is_page=True)
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=post_page_query_result)
 
 
-@postController.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:post:add'))])
+@postRoute.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:post:add'))])
 @ValidateFields(validate_model='add_post')
 @Log(title='岗位管理', business_type=BusinessType.INSERT)
 async def add_system_post(
@@ -56,11 +54,10 @@ async def add_system_post(
     add_post.update_time = datetime.now()
     add_post_result = await PostService.add_post_services(query_db, add_post)
     logger.info(add_post_result.message)
-
     return ResponseUtil.success(msg=add_post_result.message)
 
 
-@postController.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:post:edit'))])
+@postRoute.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:post:edit'))])
 @ValidateFields(validate_model='edit_post')
 @Log(title='岗位管理', business_type=BusinessType.UPDATE)
 async def edit_system_post(
@@ -73,31 +70,28 @@ async def edit_system_post(
     edit_post.update_time = datetime.now()
     edit_post_result = await PostService.edit_post_services(query_db, edit_post)
     logger.info(edit_post_result.message)
-
     return ResponseUtil.success(msg=edit_post_result.message)
 
 
-@postController.delete('/{post_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:post:remove'))])
+@postRoute.delete('/{post_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:post:remove'))])
 @Log(title='岗位管理', business_type=BusinessType.DELETE)
 async def delete_system_post(request: Request, post_ids: str, query_db: AsyncSession = Depends(get_db)):
     delete_post = DeletePostModel(postIds=post_ids)
     delete_post_result = await PostService.delete_post_services(query_db, delete_post)
     logger.info(delete_post_result.message)
-
     return ResponseUtil.success(msg=delete_post_result.message)
 
 
-@postController.get(
+@postRoute.get(
     '/{post_id}', response_model=PostModel, dependencies=[Depends(CheckUserInterfaceAuth('system:post:query'))]
 )
 async def query_detail_system_post(request: Request, post_id: int, query_db: AsyncSession = Depends(get_db)):
     post_detail_result = await PostService.post_detail_services(query_db, post_id)
     logger.info(f'获取post_id为{post_id}的信息成功')
-
     return ResponseUtil.success(data=post_detail_result)
 
 
-@postController.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:post:export'))])
+@postRoute.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:post:export'))])
 @Log(title='岗位管理', business_type=BusinessType.EXPORT)
 async def export_system_post_list(
     request: Request,
@@ -108,5 +102,4 @@ async def export_system_post_list(
     post_query_result = await PostService.get_post_list_services(query_db, post_page_query, is_page=False)
     post_export_result = await PostService.export_post_list_services(post_query_result)
     logger.info('导出成功')
-
     return ResponseUtil.streaming(data=bytes2file_response(post_export_result))

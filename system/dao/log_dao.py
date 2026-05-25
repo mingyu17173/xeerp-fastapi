@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: log_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -10,9 +10,9 @@ from sqlalchemy import asc, delete, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.log import SysLogininfor, SysOperLog
 from schemas.log_schema import LogininforModel, LoginLogPageQueryModel, OperLogModel, OperLogPageQueryModel
-from utils.common_util import SnakeCaseUtil
-from utils.page_util import PageUtil
-from utils.time_format_util import TimeFormatUtil
+from common.utils.common_util import SnakeCaseUtil
+from common.utils.page_util import PageUtil
+from common.utils.time_format_util import TimeFormatUtil
 
 
 class OperationLogDao:

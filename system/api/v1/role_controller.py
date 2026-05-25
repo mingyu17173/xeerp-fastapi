@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: role_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: role_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -21,16 +21,15 @@ from service.dept_service import DeptService
 from service.login_service import LoginService
 from service.role_service import RoleService
 from service.user_service import UserService
-from utils.common_util import bytes2file_response
-from utils.log_util import logger
-from utils.page_util import PageResponseModel
-from utils.response_util import ResponseUtil
+from common.utils.common_util import bytes2file_response
+from common.utils.log_util import logger
+from common.utils.page_util import PageResponseModel
+from common.utils.response_util import ResponseUtil
 
 
-roleController = APIRouter(prefix='/system/role', dependencies=[Depends(LoginService.get_current_user)])
+roleRoute = APIRouter(prefix='/system/role', dependencies=[Depends(LoginService.get_current_user)])
 
-
-@roleController.get('/deptTree/{role_id}', dependencies=[Depends(CheckUserInterfaceAuth('system:role:query'))])
+@roleRoute.get('/deptTree/{role_id}', dependencies=[Depends(CheckUserInterfaceAuth('system:role:query'))])
 async def get_system_role_dept_tree(
     request: Request,
     role_id: int,
@@ -41,12 +40,13 @@ async def get_system_role_dept_tree(
     role_dept_query_result = await RoleService.get_role_dept_tree_services(query_db, role_id)
     role_dept_query_result.depts = dept_query_result
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=role_dept_query_result)
 
 
-@roleController.get(
-    '/list', response_model=PageResponseModel, dependencies=[Depends(CheckUserInterfaceAuth('system:role:list'))]
+@roleRoute.get(
+    '/list', 
+    response_model=PageResponseModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:role:list'))]
 )
 async def get_system_role_list(
     request: Request,
@@ -58,11 +58,10 @@ async def get_system_role_list(
         query_db, role_page_query, data_scope_sql, is_page=True
     )
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=role_page_query_result)
 
 
-@roleController.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:role:add'))])
+@roleRoute.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:role:add'))])
 @ValidateFields(validate_model='add_role')
 @Log(title='角色管理', business_type=BusinessType.INSERT)
 async def add_system_role(
@@ -77,11 +76,10 @@ async def add_system_role(
     add_role.update_time = datetime.now()
     add_role_result = await RoleService.add_role_services(query_db, add_role)
     logger.info(add_role_result.message)
-
     return ResponseUtil.success(msg=add_role_result.message)
 
 
-@roleController.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @ValidateFields(validate_model='edit_role')
 @Log(title='角色管理', business_type=BusinessType.UPDATE)
 async def edit_system_role(
@@ -98,11 +96,10 @@ async def edit_system_role(
     edit_role.update_time = datetime.now()
     edit_role_result = await RoleService.edit_role_services(query_db, edit_role)
     logger.info(edit_role_result.message)
-
     return ResponseUtil.success(msg=edit_role_result.message)
 
 
-@roleController.put('/dataScope', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put('/dataScope', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @Log(title='角色管理', business_type=BusinessType.GRANT)
 async def edit_system_role_datascope(
     request: Request,
@@ -124,11 +121,13 @@ async def edit_system_role_datascope(
     )
     role_data_scope_result = await RoleService.role_datascope_services(query_db, edit_role)
     logger.info(role_data_scope_result.message)
-
     return ResponseUtil.success(msg=role_data_scope_result.message)
 
 
-@roleController.delete('/{role_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:role:remove'))])
+@roleRoute.delete(
+    '/{role_ids}', 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:role:remove'))]
+)
 @Log(title='角色管理', business_type=BusinessType.DELETE)
 async def delete_system_role(
     request: Request,
@@ -146,12 +145,13 @@ async def delete_system_role(
     delete_role = DeleteRoleModel(roleIds=role_ids, updateBy=current_user.user.user_name, updateTime=datetime.now())
     delete_role_result = await RoleService.delete_role_services(query_db, delete_role)
     logger.info(delete_role_result.message)
-
     return ResponseUtil.success(msg=delete_role_result.message)
 
 
-@roleController.get(
-    '/{role_id}', response_model=RoleModel, dependencies=[Depends(CheckUserInterfaceAuth('system:role:query'))]
+@roleRoute.get(
+    '/{role_id}',
+    response_model=RoleModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:role:query'))]
 )
 async def query_detail_system_role(
     request: Request,
@@ -164,11 +164,10 @@ async def query_detail_system_role(
         await RoleService.check_role_data_scope_services(query_db, str(role_id), data_scope_sql)
     role_detail_result = await RoleService.role_detail_services(query_db, role_id)
     logger.info(f'获取role_id为{role_id}的信息成功')
-
     return ResponseUtil.success(data=role_detail_result.model_dump(by_alias=True))
 
 
-@roleController.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:role:export'))])
+@roleRoute.post('/export', dependencies=[Depends(CheckUserInterfaceAuth('system:role:export'))])
 @Log(title='角色管理', business_type=BusinessType.EXPORT)
 async def export_system_role_list(
     request: Request,
@@ -186,7 +185,7 @@ async def export_system_role_list(
     return ResponseUtil.streaming(data=bytes2file_response(role_export_result))
 
 
-@roleController.put('/changeStatus', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put('/changeStatus', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @Log(title='角色管理', business_type=BusinessType.UPDATE)
 async def reset_system_role_status(
     request: Request,
@@ -207,11 +206,10 @@ async def reset_system_role_status(
     )
     edit_role_result = await RoleService.edit_role_services(query_db, edit_role)
     logger.info(edit_role_result.message)
-
     return ResponseUtil.success(msg=edit_role_result.message)
 
 
-@roleController.get(
+@roleRoute.get(
     '/authUser/allocatedList',
     response_model=PageResponseModel,
     dependencies=[Depends(CheckUserInterfaceAuth('system:role:list'))],
@@ -226,11 +224,10 @@ async def get_system_allocated_user_list(
         query_db, user_role, data_scope_sql, is_page=True
     )
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=role_user_allocated_page_query_result)
 
 
-@roleController.get(
+@roleRoute.get(
     '/authUser/unallocatedList',
     response_model=PageResponseModel,
     dependencies=[Depends(CheckUserInterfaceAuth('system:role:list'))],
@@ -245,11 +242,12 @@ async def get_system_unallocated_user_list(
         query_db, user_role, data_scope_sql, is_page=True
     )
     logger.info('获取成功')
-
     return ResponseUtil.success(model_content=role_user_unallocated_page_query_result)
 
 
-@roleController.put('/authUser/selectAll', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put(
+    '/authUser/selectAll', 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @Log(title='角色管理', business_type=BusinessType.GRANT)
 async def add_system_role_user(
     request: Request,
@@ -266,7 +264,7 @@ async def add_system_role_user(
     return ResponseUtil.success(msg=add_role_user_result.message)
 
 
-@roleController.put('/authUser/cancel', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put('/authUser/cancel', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @Log(title='角色管理', business_type=BusinessType.GRANT)
 async def cancel_system_role_user(
     request: Request, cancel_user_role: CrudUserRoleModel, query_db: AsyncSession = Depends(get_db)
@@ -277,7 +275,7 @@ async def cancel_system_role_user(
     return ResponseUtil.success(msg=cancel_user_role_result.message)
 
 
-@roleController.put('/authUser/cancelAll', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
+@roleRoute.put('/authUser/cancelAll', dependencies=[Depends(CheckUserInterfaceAuth('system:role:edit'))])
 @Log(title='角色管理', business_type=BusinessType.GRANT)
 async def batch_cancel_system_role_user(
     request: Request,

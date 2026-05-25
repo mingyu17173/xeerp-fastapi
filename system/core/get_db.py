@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: get_db.py
 # @Software: PyCharm
 # @Desc : 核心配置
 
 from .database import async_engine, AsyncSessionLocal, Base
-from utils.log_util import logger
-from .system_env import DataBaseConfig
+from common.utils.log_util import logger
+from core.system_env import DataBaseConfig
 
 
 async def get_db():

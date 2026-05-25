@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @Software: PyCharm
 
 import os
@@ -9,7 +9,7 @@ import re
 # 定义要添加的头部模板
 HEADER_TEMPLATE = '''# -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @Software: PyCharm
 '''
 
@@ -40,7 +40,7 @@ def get_file_header(filename):
 
     return f'''# -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: {os.path.basename(filename)}
 # @Software: PyCharm
 # @Desc : {desc}

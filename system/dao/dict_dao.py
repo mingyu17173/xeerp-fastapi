@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: dict_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -10,8 +10,8 @@ from sqlalchemy import and_, delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.dict import SysDictType, SysDictData
 from schemas.dict_schema import DictDataModel, DictDataPageQueryModel, DictTypeModel, DictTypePageQueryModel
-from utils.page_util import PageUtil
-from utils.time_format_util import list_format_datetime
+from common.utils.page_util import PageUtil
+from common.utils.time_format_util import list_format_datetime
 
 
 class DictTypeDao:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: captcha_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: captcha_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -11,14 +11,13 @@ from fastapi import APIRouter, Request
 from core.enums import RedisInitKeyConfig
 from schemas.login_schema import CaptchaCode
 from service.captcha_service import CaptchaService
-from utils.response_util import ResponseUtil
-from utils.log_util import logger
+from common.utils.response_util import ResponseUtil
+from common.utils.log_util import logger
 
 
-captchaController = APIRouter()
+captchaRoute = APIRouter()
 
-
-@captchaController.get('/captchaImage')
+@captchaRoute.get('/captchaImage')
 async def get_captcha_image(request: Request):
     captcha_enabled = (
         True
@@ -39,7 +38,6 @@ async def get_captcha_image(request: Request):
         f'{RedisInitKeyConfig.CAPTCHA_CODES.key}:{session_id}', computed_result, ex=timedelta(minutes=2)
     )
     logger.info(f'编号为{session_id}的会话获取图片验证码成功')
-
     return ResponseUtil.success(
         model_content=CaptchaCode(
             captchaEnabled=captcha_enabled, registerEnabled=register_enabled, img=image, uuid=session_id

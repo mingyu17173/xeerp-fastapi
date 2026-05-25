@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: notice_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -10,7 +10,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.notice import SysNotice
 from schemas.notice_schema import NoticeModel, NoticePageQueryModel
-from utils.page_util import PageUtil
+from common.utils.page_util import PageUtil
 
 
 class NoticeDao:

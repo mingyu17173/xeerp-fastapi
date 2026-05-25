@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: pydantic_annotation.py
 # @Software: PyCharm
 # @Desc : 核心配置
@@ -13,7 +13,6 @@ from typing import Type, TypeVar
 
 
 BaseModelVar = TypeVar('BaseModelVar', bound=BaseModel)
-
 
 def as_query(cls: Type[BaseModelVar]) -> Type[BaseModelVar]:
     """

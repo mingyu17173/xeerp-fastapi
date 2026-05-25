@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: role_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -22,9 +22,9 @@ from schemas.role_schema import (
 from schemas.user_schema import UserInfoModel, UserRolePageQueryModel
 from dao.role_dao import RoleDao
 from dao.user_dao import UserDao
-from utils.common_util import CamelCaseUtil
-from utils.excel_util import ExcelUtil
-from utils.page_util import PageResponseModel
+from common.utils.common_util import CamelCaseUtil
+from common.utils.excel_util import ExcelUtil
+from common.utils.page_util import PageResponseModel
 
 
 class RoleService:

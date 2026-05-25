@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: common_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -11,7 +11,7 @@ from fastapi import BackgroundTasks, Request, UploadFile
 from core.env import UploadConfig
 from core.exception import ServiceException
 from schemas.common_schema import CrudResponseModel, UploadResponseModel
-from utils.upload_util import UploadUtil
+from common.utils.upload_util import UploadUtil
 
 
 class CommonService:

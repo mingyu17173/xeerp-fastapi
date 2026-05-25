@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: user_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -22,7 +22,7 @@ from schemas.user_schema import (
     UserRolePageQueryModel,
     UserRoleQueryModel,
 )
-from utils.page_util import PageUtil
+from common.utils.page_util import PageUtil
 
 
 class UserDao:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: job_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -15,10 +15,10 @@ from dao.job_dao import JobDao
 from schemas.common_schema import CrudResponseModel
 from schemas.job_schema import DeleteJobModel, EditJobModel, JobModel, JobPageQueryModel
 from service.dict_service import DictDataService
-from utils.common_util import CamelCaseUtil
-from utils.cron_util import CronUtil
-from utils.excel_util import ExcelUtil
-from utils.string_util import StringUtil
+from common.utils.common_util import CamelCaseUtil
+from common.utils.cron_util import CronUtil
+from common.utils.excel_util import ExcelUtil
+from common.utils.string_util import StringUtil
 
 
 class JobService:

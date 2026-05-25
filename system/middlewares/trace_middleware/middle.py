@@ -7,7 +7,7 @@
 
 from functools import wraps
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
-from .span import get_current_span, Span
+from span import get_current_span, Span
 
 
 class TraceASGIMiddleware:

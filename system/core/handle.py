@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: handle.py
 # @Software: PyCharm
 # @Desc : 核心配置
@@ -16,8 +16,8 @@ from .exception import (
     ServiceException,
     ServiceWarning,
 )
-from utils.log_util import logger
-from utils.response_util import jsonable_encoder, JSONResponse, ResponseUtil
+from common.utils.log_util import logger
+from common.utils.response_util import jsonable_encoder, JSONResponse, ResponseUtil
 
 
 def handle_exception(app: FastAPI):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: config_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -14,8 +14,8 @@ from core.exception import ServiceException
 from dao.config_dao import ConfigDao
 from schemas.common_schema import CrudResponseModel
 from schemas.config_schema import ConfigModel, ConfigPageQueryModel, DeleteConfigModel
-from utils.common_util import CamelCaseUtil
-from utils.excel_util import ExcelUtil
+from common.utils.common_util import CamelCaseUtil
+from common.utils.excel_util import ExcelUtil
 
 
 class ConfigService:

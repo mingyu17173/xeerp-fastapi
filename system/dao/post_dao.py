@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: post_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from models.post import SysPost
 from models.user import SysUserPost
 from schemas.post_schema import PostModel, PostPageQueryModel
-from utils.page_util import PageUtil
+from common.utils.page_util import PageUtil
 
 
 class PostDao:

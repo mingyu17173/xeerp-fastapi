@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: dept_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: dept_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -19,14 +19,13 @@ from schemas.dept_schema import DeleteDeptModel, DeptModel, DeptQueryModel
 from schemas.user_schema import CurrentUserModel
 from service.dept_service import DeptService
 from service.login_service import LoginService
-from utils.log_util import logger
-from utils.response_util import ResponseUtil
+from common.utils.log_util import logger
+from common.utils.response_util import ResponseUtil
 
 
-deptController = APIRouter(prefix='/system/dept', dependencies=[Depends(LoginService.get_current_user)])
+deptRoute = APIRouter(prefix='/system/dept', dependencies=[Depends(LoginService.get_current_user)])
 
-
-@deptController.get(
+@deptRoute.get(
     '/list/exclude/{dept_id}',
     response_model=List[DeptModel],
     dependencies=[Depends(CheckUserInterfaceAuth('system:dept:list'))],
@@ -40,12 +39,13 @@ async def get_system_dept_tree_for_edit_option(
     dept_query = DeptModel(deptId=dept_id)
     dept_query_result = await DeptService.get_dept_for_edit_option_services(query_db, dept_query, data_scope_sql)
     logger.info('获取成功')
-
     return ResponseUtil.success(data=dept_query_result)
 
 
-@deptController.get(
-    '/list', response_model=List[DeptModel], dependencies=[Depends(CheckUserInterfaceAuth('system:dept:list'))]
+@deptRoute.get(
+    '/list', 
+    response_model=List[DeptModel], 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:dept:list'))]
 )
 async def get_system_dept_list(
     request: Request,
@@ -55,11 +55,10 @@ async def get_system_dept_list(
 ):
     dept_query_result = await DeptService.get_dept_list_services(query_db, dept_query, data_scope_sql)
     logger.info('获取成功')
-
     return ResponseUtil.success(data=dept_query_result)
 
 
-@deptController.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:dept:add'))])
+@deptRoute.post('', dependencies=[Depends(CheckUserInterfaceAuth('system:dept:add'))])
 @ValidateFields(validate_model='add_dept')
 @Log(title='部门管理', business_type=BusinessType.INSERT)
 async def add_system_dept(
@@ -74,11 +73,10 @@ async def add_system_dept(
     add_dept.update_time = datetime.now()
     add_dept_result = await DeptService.add_dept_services(query_db, add_dept)
     logger.info(add_dept_result.message)
-
     return ResponseUtil.success(data=add_dept_result)
 
 
-@deptController.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:dept:edit'))])
+@deptRoute.put('', dependencies=[Depends(CheckUserInterfaceAuth('system:dept:edit'))])
 @ValidateFields(validate_model='edit_dept')
 @Log(title='部门管理', business_type=BusinessType.UPDATE)
 async def edit_system_dept(
@@ -94,11 +92,13 @@ async def edit_system_dept(
     edit_dept.update_time = datetime.now()
     edit_dept_result = await DeptService.edit_dept_services(query_db, edit_dept)
     logger.info(edit_dept_result.message)
-
     return ResponseUtil.success(msg=edit_dept_result.message)
 
 
-@deptController.delete('/{dept_ids}', dependencies=[Depends(CheckUserInterfaceAuth('system:dept:remove'))])
+@deptRoute.delete(
+    '/{dept_ids}',
+    dependencies=[Depends(CheckUserInterfaceAuth('system:dept:remove'))]
+)
 @Log(title='部门管理', business_type=BusinessType.DELETE)
 async def delete_system_dept(
     request: Request,
@@ -117,12 +117,13 @@ async def delete_system_dept(
     delete_dept.update_time = datetime.now()
     delete_dept_result = await DeptService.delete_dept_services(query_db, delete_dept)
     logger.info(delete_dept_result.message)
-
     return ResponseUtil.success(msg=delete_dept_result.message)
 
 
-@deptController.get(
-    '/{dept_id}', response_model=DeptModel, dependencies=[Depends(CheckUserInterfaceAuth('system:dept:query'))]
+@deptRoute.get(
+    '/{dept_id}', 
+    response_model=DeptModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('system:dept:query'))]
 )
 async def query_detail_system_dept(
     request: Request,
@@ -135,5 +136,4 @@ async def query_detail_system_dept(
         await DeptService.check_dept_data_scope_services(query_db, dept_id, data_scope_sql)
     detail_dept_result = await DeptService.dept_detail_services(query_db, dept_id)
     logger.info(f'获取dept_id为{dept_id}的信息成功')
-
     return ResponseUtil.success(data=detail_dept_result)

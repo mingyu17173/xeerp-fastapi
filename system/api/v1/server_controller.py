@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
-# @FileName: server_controller.py
+# @Author : fgf67@163.com<hmy>
+# @FileName: server_Route.py
 # @Software: PyCharm
 # @Desc : 控制器
 
@@ -10,15 +10,19 @@ from core.aspect.interface_auth import CheckUserInterfaceAuth
 from schemas.server_schema import ServerMonitorModel
 from service.login_service import LoginService
 from service.server_service import ServerService
-from utils.response_util import ResponseUtil
-from utils.log_util import logger
+from common.utils.response_util import ResponseUtil
+from common.utils.log_util import logger
 
 
-serverController = APIRouter(prefix='/monitor/server', dependencies=[Depends(LoginService.get_current_user)])
+serverRoute = APIRouter(
+    prefix='/monitor/server', 
+    dependencies=[Depends(LoginService.get_current_user)]
+)
 
-
-@serverController.get(
-    '', response_model=ServerMonitorModel, dependencies=[Depends(CheckUserInterfaceAuth('monitor:server:list'))]
+@serverRoute.get(
+    '', 
+    response_model=ServerMonitorModel, 
+    dependencies=[Depends(CheckUserInterfaceAuth('monitor:server:list'))]
 )
 async def get_monitor_server_info(request: Request):
     # 获取全量数据

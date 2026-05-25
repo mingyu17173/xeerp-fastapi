@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: online_controller.py
 # @Software: PyCharm
 # @Desc : 控制器
@@ -14,9 +14,9 @@ from core.aspect.interface_auth import CheckUserInterfaceAuth
 from schemas.online_schema import DeleteOnlineModel, OnlineQueryModel
 from service.login_service import LoginService
 from service.online_service import OnlineService
-from utils.log_util import logger
-from utils.page_util import PageResponseModel
-from utils.response_util import ResponseUtil
+from common.utils.log_util import logger
+from common.utils.page_util import PageResponseModel
+from common.utils.response_util import ResponseUtil
 
 
 onlineController = APIRouter(prefix='/monitor/online', dependencies=[Depends(LoginService.get_current_user)])

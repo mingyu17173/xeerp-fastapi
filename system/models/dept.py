@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: dept.py
 # @Software: PyCharm
 # @Desc : 数据模型
@@ -9,7 +9,7 @@ from datetime import datetime
 from sqlalchemy import BigInteger, CHAR, Column, DateTime, Integer, String
 from core.database import Base
 from core.env import DataBaseConfig
-from utils.common_util import SqlalchemyUtil
+from common.utils.common_util import SqlalchemyUtil
 
 
 class SysDept(Base):

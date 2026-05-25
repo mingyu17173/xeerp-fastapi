@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: role_dao.py
 # @Software: PyCharm
 # @Desc : 数据访问层
@@ -13,7 +13,7 @@ from models.menu import SysMenu
 from models.role import SysRole, SysRoleMenu, SysRoleDept
 from models.user import SysUser, SysUserRole
 from schemas.role_schema import RoleDeptModel, RoleMenuModel, RoleModel, RolePageQueryModel
-from utils.page_util import PageUtil
+from common.utils.page_util import PageUtil
 
 
 class RoleDao:

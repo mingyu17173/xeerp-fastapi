@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: menu_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -15,8 +15,8 @@ from schemas.common_schema import CrudResponseModel
 from schemas.menu_schema import DeleteMenuModel, MenuQueryModel, MenuModel
 from schemas.role_schema import RoleMenuQueryModel
 from schemas.user_schema import CurrentUserModel
-from utils.common_util import CamelCaseUtil
-from utils.string_util import StringUtil
+from common.utils.common_util import CamelCaseUtil
+from common.utils.string_util import StringUtil
 
 
 class MenuService:

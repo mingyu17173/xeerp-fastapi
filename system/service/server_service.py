@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2026/5/24
-# @Author : ERP微服务开发组
+# @Author : fgf67@163.com<hmy>
 # @FileName: server_service.py
 # @Software: PyCharm
 # @Desc : 业务服务
@@ -11,7 +11,7 @@ import psutil
 import socket
 import time
 from schemas.server_schema import CpuInfo, MemoryInfo, PyInfo, ServerMonitorModel, SysFiles, SysInfo
-from utils.common_util import bytes2human
+from common.utils.common_util import bytes2human
 
 
 class ServerService:
