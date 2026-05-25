@@ -1,23 +1,37 @@
-"""
-数据库配置模块
-"""
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: database.py
+# @Software: PyCharm
+# @Desc : 核心配置
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from .env import settings
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.orm import DeclarativeBase
+from urllib.parse import quote_plus
+from core.env import DataBaseConfig
 
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}"
-    f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+ASYNC_SQLALCHEMY_DATABASE_URL = (
+    f'mysql+asyncmy://{DataBaseConfig.db_username}:{quote_plus(DataBaseConfig.db_password)}@'
+    f'{DataBaseConfig.db_host}:{DataBaseConfig.db_port}/{DataBaseConfig.db_database}'
 )
+if DataBaseConfig.db_type == 'postgresql':
+    ASYNC_SQLALCHEMY_DATABASE_URL = (
+        f'postgresql+asyncpg://{DataBaseConfig.db_username}:{quote_plus(DataBaseConfig.db_password)}@'
+        f'{DataBaseConfig.db_host}:{DataBaseConfig.db_port}/{DataBaseConfig.db_database}'
+    )
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    pool_pre_ping=True,
+async_engine = create_async_engine(
+    ASYNC_SQLALCHEMY_DATABASE_URL,
+    echo=DataBaseConfig.db_echo,
+    max_overflow=10,
     pool_size=10,
-    max_overflow=20
+    pool_recycle=DataBaseConfig.db_pool_recycle,
+    pool_timeout=DataBaseConfig.db_pool_timeout,
 )
+AsyncSessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=async_engine)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+
+class Base(AsyncAttrs, DeclarativeBase):
+    pass

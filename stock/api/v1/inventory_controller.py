@@ -1,11 +1,18 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: inventory_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.get_db import get_db
-from service.inventory_service import InventoryService
-from service.inventory_flow_service import InventoryFlowService
-from schemas.inventory_schema import InventoryModel, InventoryQueryModel, InventoryAdjustModel
-from schemas.inventory_flow_schema import InventoryFlowModel, InventoryFlowQueryModel
-from schemas.common_schema import CrudResponseModel, PageResponseModel
+from ...core.get_db import get_db
+from ...service.inventory_service import InventoryService
+from ...service.inventory_flow_service import InventoryFlowService
+from ...schemas.inventory_schema import InventoryModel, InventoryQueryModel, InventoryAdjustModel
+from ...schemas.inventory_flow_schema import InventoryFlowModel, InventoryFlowQueryModel
+from ...schemas.common_schema import CrudResponseModel, PageResponseModel
 from typing import List
 
 router = APIRouter(prefix='/stock', tags=['库存管理'])

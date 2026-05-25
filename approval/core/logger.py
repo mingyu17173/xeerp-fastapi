@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: logger.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 """
 Approval Service Logger Configuration
 审批服务日志配置

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: __init__.py
+# @Software: PyCharm
+# @Desc : 数据模式
+
 from schemas.bom_schema import BomModel, AddBomModel, EditBomModel, BomPageQueryModel, BomItemModel
 from schemas.production_plan_schema import ProductionPlanModel, AddProductionPlanModel, EditProductionPlanModel, ProductionPlanPageQueryModel
 from schemas.production_issue_schema import ProductionIssueModel, AddProductionIssueModel, ProductionIssuePageQueryModel, ProductionIssueItemModel

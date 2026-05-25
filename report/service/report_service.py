@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: report_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 from typing import List, Dict
 from clients.production_client import ProductionClient
 from clients.stock_client import StockClient

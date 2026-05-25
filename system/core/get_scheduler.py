@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: get_scheduler.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 import json
 from apscheduler.events import EVENT_ALL
 from apscheduler.executors.asyncio import AsyncIOExecutor
@@ -15,11 +22,11 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
 from typing import Union
 from core.database import AsyncSessionLocal, quote_plus
-from core.env import DataBaseConfig, RedisConfig
+from core.system_env import DataBaseConfig, RedisConfig
 from dao.job_dao import JobDao
 from schemas.job_schema import JobLogModel, JobModel
 from service.job_log_service import JobLogService
-from utils.log_util import logger
+from core.logger import logger
 import script_task  # noqa: F401
 
 

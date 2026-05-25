@@ -1,8 +1,7 @@
-"""
-网关服务核心模块
-"""
-from core.env import AppConfig
-from core.auth import create_jwt_token, verify_jwt_token, JWTBearer
-from core.limiter import limiter
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: __init__.py
+# @Software: PyCharm
+# @Desc : 核心配置
 
-__all__ = ['AppConfig', 'create_jwt_token', 'verify_jwt_token', 'JWTBearer', 'limiter']

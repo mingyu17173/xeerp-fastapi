@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: job.py
+# @Software: PyCharm
+# @Desc : 数据模型
+
 from datetime import datetime
 from sqlalchemy import BigInteger, CHAR, Column, DateTime, DOUBLE, Index, LargeBinary, String
 from core.database import Base

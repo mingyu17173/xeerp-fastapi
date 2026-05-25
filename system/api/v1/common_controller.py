@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: common_controller.py
+# @Software: PyCharm
+# @Desc : 控制器
+
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Query, Request, UploadFile
 from service.common_service import CommonService
 from service.login_service import LoginService

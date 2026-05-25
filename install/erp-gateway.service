@@ -1,0 +1,14 @@
+[Unit]
+Description=ERP Gateway Service
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/app/gateway-service
+ExecStart=/usr/bin/gunicorn main:app -c gunicorn_conf.py
+Restart=always        # 挂了自动重启
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

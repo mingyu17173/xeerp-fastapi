@@ -1,5 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: enums.py
+# @Software: PyCharm
+# @Desc : 核心配置
+
 from enum import Enum
 from typing import Dict, Any
+
 
 class BusinessType(Enum):
     """
@@ -28,7 +36,8 @@ class BusinessType(Enum):
     FORCE = 7
     GENCODE = 8
     CLEAN = 9
-    TRANSFER =10
+    TRANSFER = 10
+
 
 class RedisInitKeyConfig(Enum):
     """
@@ -230,24 +239,3 @@ class ErrorCodeManager:
             "category": cls.get_category(error_code).value,
             "description": cls.get_description(error_code)
         }
-
-
-# 使用示例
-if __name__ == "__main__":
-    # 测试错误码功能
-    test_codes = [
-        ErrorCode.LOGIN_FAILED,
-        ErrorCode.AUTH_EXPIRED,
-        ErrorCode.PERMISSION_DENIED,
-        ErrorCode.SERVICE_ERROR,
-        ErrorCode.SERVICE_WARNING,
-        ErrorCode.VALIDATION_ERROR
-    ]
-
-    print("=== 错误码系统测试 ===")
-    for code in test_codes:
-        info = ErrorCodeManager.get_error_info(code)
-        print(f"错误码: {info['error_code']}")
-        print(f"描述: {info['description']}")
-        print(f"HTTP状态码: {info['http_status']}")
-        print(f"分类: {info['category']}\n")

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time : 2026/5/24
+# @Author : ERP微服务开发组
+# @FileName: user_service.py
+# @Software: PyCharm
+# @Desc : 业务服务
+
 import io,json
 import pandas as pd
 from datetime import datetime
